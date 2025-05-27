@@ -2,21 +2,15 @@ package org.firstinspires.ftc.teamcode.subsystems.drive;
 
 import com.pedropathing.follower.Follower;
 import com.pedropathing.localization.Pose;
-import com.pedropathing.localization.localizers.OTOSLocalizer;
 import com.pedropathing.pathgen.PathBuilder;
 import com.pedropathing.pathgen.PathChain;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.commands.auto.PoseStorage;
-import org.firstinspires.ftc.teamcode.subsystems.drive.localizer.LimelightLocalizerOTOS;
 
 import java.util.function.DoubleSupplier;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -29,7 +23,7 @@ public class Drive extends SubsystemBase {
         drive = new Follower(hwMap, DriveConstants.FConstants.class, DriveConstants.LConstants.class);
 
         drive.setPose(PoseStorage.currentPose);
-//        drive.initialize(new LimelightLocalizerOTOS(hwMap));
+
         this.telemetry = telemetry;
     }
 

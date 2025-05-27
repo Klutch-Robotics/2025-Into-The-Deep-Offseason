@@ -5,6 +5,7 @@ import com.acmerobotics.dashboard.config.Config;
 import org.ejml.dense.row.FMatrixComponent;
 import org.firstinspires.ftc.teamcode.lib.controller.SquIDController;
 import org.firstinspires.ftc.teamcode.subsystems.drive.Drive;
+import org.firstinspires.ftc.teamcode.subsystems.vision.Vision;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -19,7 +20,14 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
+@Config
 public class DriveCommands {
+    public static double PIECE_TRANSLATIONALP = 0.1;
+    public static double PIECE_ROTATIONALP = 0.01;
+
+    public static double PIECE_XSETPOINT = 0.0;
+    public static double PIECE_YSETPOINT = 0.0;
+    public static double PIECE_OMEGASETPOINT = 0.0;
 
     private DriveCommands() {}
 
@@ -68,6 +76,41 @@ public class DriveCommands {
                                     xSupplier,
                                     ySupplier,
                                     () -> omega);
+                        },
+                        drive));
+    }
+
+    public static Command driveToPiece(Drive drive, Vision vision) {
+        SquIDController translationalController =
+                new SquIDController(
+                        PIECE_TRANSLATIONALP);
+
+        SquIDController omegaController =
+                new SquIDController(
+                        PIECE_ROTATIONALP);
+
+        omegaController.enableContinuousInput(0, 180);
+
+        return Commands.runOnce(drive::startTeleopDrive, drive).andThen(
+                Commands.run(
+                        () -> {
+                            // Calculate angular speed
+                            double xEffort =
+                                    translationalController.calculate(PIECE_TRANSLATIONALP,
+                                            PIECE_XSETPOINT, vision.getTx());
+
+                            double yEffort =
+                                    -translationalController.calculate(PIECE_TRANSLATIONALP,
+                                            PIECE_YSETPOINT, vision.getTy());
+
+                            double omegaEffort =
+                                    omegaController.calculate(PIECE_ROTATIONALP,
+                                        PIECE_OMEGASETPOINT, vision.getAngle());
+
+                            drive.drive(
+                                    () -> xEffort,
+                                    () -> yEffort,
+                                    () -> omegaEffort);
                         },
                         drive));
     }

@@ -5,24 +5,31 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.commands.AutoCommands;
+import org.firstinspires.ftc.teamcode.commands.DriveCommands;
 import org.firstinspires.ftc.teamcode.lib.wpilib.CommandGamepad;
 import org.firstinspires.ftc.teamcode.subsystems.drive.Drive;
+import org.firstinspires.ftc.teamcode.subsystems.elevator.Elevator;
 import org.firstinspires.ftc.teamcode.subsystems.pivot.Pivot;
+import org.firstinspires.ftc.teamcode.subsystems.vision.Vision;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 
 public class RobotContainer {
     private final Drive drive;
-    private final Pivot pivot;
-//    private final ServoIntake servoIntake;
+//    private final Pivot pivot;
+//    private final Elevator elevator;
+
+    private final Vision vision;
 
     private final CommandGamepad driverController;
 
     public RobotContainer(HardwareMap hwMap, Telemetry telemetry, Gamepad gamepad1, Gamepad gamepad2, int autoNum) {
         drive = new Drive(hwMap, telemetry);
-        pivot = new Pivot(hwMap, telemetry);
-//        servoIntake = new ServoIntake(hwMap, telemetry);
+//        pivot = new Pivot(hwMap, telemetry);
+//        elevator = new Elevator(hwMap, telemetry);
+
+        vision = new Vision(hwMap, telemetry);
 
         driverController = new CommandGamepad(gamepad1);
 
@@ -35,12 +42,8 @@ public class RobotContainer {
     }
 
     public void setDefaultCommands(){
-//        drive.setDefaultCommand(
-//                DriveCommands.joystickDrive(
-//                        drive,
-//                        () -> -driverController.getLeftY(),
-//                        () -> -driverController.getLeftX(),
-//                        () -> -driverController.getRightX()));
+        drive.setDefaultCommand(
+                DriveCommands.driveToPiece(drive, vision));
     }
 
     public void configureButtonBindings() {
@@ -49,7 +52,7 @@ public class RobotContainer {
     public Command getAutoCommand(int chooser) {
         switch (chooser) {
             case 1:
-            return AutoCommands.blueAuto(drive, pivot);
+//            return AutoCommands.blueAuto(drive, pivot);
         }
         return Commands.none();
     }

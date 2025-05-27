@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.lib.controller.SquIDController;
+import org.firstinspires.ftc.teamcode.lib.ftclib.hardware.ServoEx;
 import org.firstinspires.ftc.teamcode.lib.ftclib.hardware.motors.CRServo;
 import org.firstinspires.ftc.teamcode.lib.ftclib.hardware.motors.MotorEx;
 
