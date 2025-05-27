@@ -10,9 +10,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-
-import pedroPathing.constants.FConstants;
-import pedroPathing.constants.LConstants;
+import org.firstinspires.ftc.teamcode.subsystems.drive.DriveConstants;
 
 /**
  * This is the LateralTuner OpMode. This tracks the strafe movement of the robot and displays the
@@ -42,7 +40,7 @@ public class LateralTuner extends OpMode {
      */
     @Override
     public void init() {
-        poseUpdater = new PoseUpdater(hardwareMap, FConstants.class, LConstants.class);
+        poseUpdater = new PoseUpdater(hardwareMap, DriveConstants.FConstants.class, DriveConstants.LConstants.class);
 
         dashboardPoseTracker = new DashboardPoseTracker(poseUpdater);
 

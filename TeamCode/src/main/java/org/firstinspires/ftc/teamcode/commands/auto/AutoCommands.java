@@ -1,9 +1,8 @@
-package org.firstinspires.ftc.teamcode.commands;
+package org.firstinspires.ftc.teamcode.commands.auto;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.pedropathing.localization.Pose;
 
-import org.firstinspires.ftc.teamcode.commands.auto.AutoBuilder;
 import org.firstinspires.ftc.teamcode.subsystems.drive.Drive;
 import org.firstinspires.ftc.teamcode.subsystems.pivot.Pivot;
 

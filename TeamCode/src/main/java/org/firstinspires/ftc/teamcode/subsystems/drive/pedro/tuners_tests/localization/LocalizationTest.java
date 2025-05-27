@@ -23,11 +23,10 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.subsystems.drive.DriveConstants;
 
 import java.util.Arrays;
 import java.util.List;
-
-import pedroPathing.constants.*;
 
 /**
  * This is the LocalizationTest OpMode. This is basically just a simple mecanum drive attached to a
@@ -55,8 +54,8 @@ public class LocalizationTest extends OpMode {
      */
     @Override
     public void init() {
-        Constants.setConstants(FConstants.class, LConstants.class);
-        poseUpdater = new PoseUpdater(hardwareMap, FConstants.class, LConstants.class);
+        Constants.setConstants(DriveConstants.FConstants.class, DriveConstants.LConstants.class);
+        poseUpdater = new PoseUpdater(hardwareMap, DriveConstants.FConstants.class, DriveConstants.LConstants.class);
 
         dashboardPoseTracker = new DashboardPoseTracker(poseUpdater);
 

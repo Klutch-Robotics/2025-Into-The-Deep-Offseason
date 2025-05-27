@@ -22,6 +22,7 @@ public class Elevator extends SubsystemBase {
 
     private double kSetpoint;
 
+    private double currentPosition = 0;
     private double desiredPosition = 0;
 
     public Elevator(HardwareMap hwMap, Telemetry telemetry) {
@@ -45,9 +46,11 @@ public class Elevator extends SubsystemBase {
     public void periodic() {
         try {
             telemetry.addLine("Elevator");
-            telemetry.addData("Elevator Position", topMotor.getCurrentPosition() * ElevatorConstants.ticksToInches);
+            telemetry.addData("Elevator Position", currentPosition);
             telemetry.addData("Elevator Voltage", topMotor.getVoltage());
             telemetry.addData("Elevator Current", topMotor.getCurrent());
+
+            currentPosition = topMotor.getCurrentPosition() * ElevatorConstants.ticksToInches;
 
             // If setpoint on dashboard changes, update the setpoint
             if (kSetpoint != ElevatorConstants.setpoint) {
@@ -71,6 +74,10 @@ public class Elevator extends SubsystemBase {
 
     private void setPosition(double position) {
         desiredPosition = position;
+    }
+
+    public double getPosition() {
+        return currentPosition;
     }
 
     public static Command setPosition(Elevator elevator, DoubleSupplier position) {

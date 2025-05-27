@@ -36,4 +36,16 @@ public class Superstructure extends SubsystemBase {
         this.desiredState = state;
     }
 
+    public Drive getDrive() {
+        return drive;
+    }
+
+    public Pivot getPivot() {
+        return pivot;
+    }
+
+    public Elevator getElevator() {
+        return elevator;
+    }
+
 }
