@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.subsystems.elevator;
+package org.firstinspires.ftc.teamcode.subsystems.pink_arm.elevator;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -24,6 +24,13 @@ public class Elevator extends SubsystemBase {
 
     private double currentPosition = 0;
     private double desiredPosition = 0;
+
+    public enum ControlMode {
+        POSITION,
+        VOLTAGE
+    }
+
+    private ControlMode controlMode = ControlMode.POSITION;
 
     public Elevator(HardwareMap hwMap, Telemetry telemetry) {
         this.telemetry = telemetry;
@@ -52,13 +59,15 @@ public class Elevator extends SubsystemBase {
 
             currentPosition = topMotor.getCurrentPosition() * ElevatorConstants.ticksToInches;
 
-            // If setpoint on dashboard changes, update the setpoint
-            if (kSetpoint != ElevatorConstants.setpoint) {
-                kSetpoint = ElevatorConstants.setpoint;
-                desiredPosition = kSetpoint;
-            }
+            if (controlMode == ControlMode.POSITION) {
+                // If setpoint on dashboard changes, update the setpoint
+                if (kSetpoint != ElevatorConstants.setpoint) {
+                    kSetpoint = ElevatorConstants.setpoint;
+                    desiredPosition = kSetpoint;
+                }
 
-            calculateVoltage(desiredPosition);
+                calculateVoltage(desiredPosition);
+            }
         } catch (Exception ignored) {
 
         }
@@ -68,11 +77,24 @@ public class Elevator extends SubsystemBase {
         telemetry.addData("Elevator Desired Position", position);
 
         double output = controller.calculate(ElevatorConstants.kP, position, topMotor.getCurrentPosition()) + ElevatorConstants.kG;
+
         topMotor.set(output);
         bottomMotor.set(output);
     }
 
+    private void setVoltage(double voltage) {
+        if (controlMode != ControlMode.VOLTAGE) {
+            controlMode = ControlMode.VOLTAGE;
+        }
+
+        topMotor.set(voltage);
+        bottomMotor.set(voltage);
+    }
+
     private void setPosition(double position) {
+        if (controlMode != ControlMode.POSITION) {
+            controlMode = ControlMode.POSITION;
+        }
         desiredPosition = position;
     }
 
@@ -82,5 +104,9 @@ public class Elevator extends SubsystemBase {
 
     public static Command setPosition(Elevator elevator, DoubleSupplier position) {
         return Commands.run(() -> elevator.setPosition(position.getAsDouble()), elevator);
+    }
+
+    public static Command setVoltage(Elevator elevator, DoubleSupplier voltage) {
+        return Commands.run(() -> elevator.setVoltage(voltage.getAsDouble()), elevator);
     }
 }

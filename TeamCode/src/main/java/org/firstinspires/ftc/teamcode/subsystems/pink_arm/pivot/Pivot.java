@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.subsystems.pivot;
+package org.firstinspires.ftc.teamcode.subsystems.pink_arm.pivot;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 

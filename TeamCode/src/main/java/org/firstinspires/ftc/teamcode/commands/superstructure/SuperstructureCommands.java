@@ -2,17 +2,27 @@ package org.firstinspires.ftc.teamcode.commands.superstructure;
 
 import com.acmerobotics.dashboard.config.Config;
 
-import org.firstinspires.ftc.teamcode.commands.Presets;
-import org.firstinspires.ftc.teamcode.subsystems.elevator.Elevator;
-import org.firstinspires.ftc.teamcode.subsystems.pivot.Pivot;
-import org.firstinspires.ftc.teamcode.subsystems.superstructure.Superstructure;
+import org.firstinspires.ftc.teamcode.Constants;
+import org.firstinspires.ftc.teamcode.commands.DriveCommands;
+import org.firstinspires.ftc.teamcode.commands.end_effector.EndEffectorCommands;
+import org.firstinspires.ftc.teamcode.commands.pink_arm.PinkArmCommands;
+import org.firstinspires.ftc.teamcode.lib.controller.SquIDController;
+import org.firstinspires.ftc.teamcode.subsystems.Superstructure;
+import org.firstinspires.ftc.teamcode.subsystems.vision.Vision;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 
 @Config
 public class SuperstructureCommands {
-    public static double PINK_ARM_EXTENSION_THRESHOLD = 0.1;
+    public static double PIECE_X_KP = 0.0;
+    public static double PIECE_Y_KP = 0.0;
+
+    public static double PIECE_X_SETPOINT = 0.0;
+    public static double PIECE_Y_SETPOINT = 0.0;
+
+    public static double PIECE_Y_THRESHOLD = 0.0; // Threshold for y position to consider piece found
+    public static double PIECE_X_THRESHOLD = 0.0; // Threshold for x position to consider piece found
 
     public enum SuperstructureState {
         SEEK_SPEC,
@@ -25,30 +35,43 @@ public class SuperstructureCommands {
         SCORE_SAMP
     }
 
-    public enum PinkArmPreset {
-        TRAVEL,
-        INTAKE,
-        FEED,
-        SCORE_LOW_BUCKET,
-        SCORE_HIGH_BUCKET,
-        SCORE_SPEC
+    public static Command seekSpec(Superstructure superstructure, Constants.AllianceColor allianceColor) {
+        return Commands.sequence(
+                Vision.setSampPipeline(superstructure.vision(), allianceColor),
+                SuperstructureCommands.seekPiece(superstructure)
+        );
     }
 
-    public static Command setPinkArmPreset(Superstructure superstructure, PinkArmPreset preset) {
-        return Commands.deadline(
-                Commands.waitUntil(() -> superstructure.getElevator().getPosition() < PINK_ARM_EXTENSION_THRESHOLD),
-                setElevatorPreset(superstructure, PinkArmPreset.TRAVEL))
-                .andThen(setPivotPreset(superstructure, preset))
-                .andThen(setElevatorPreset(superstructure, preset));
-    }
-
-    public static Command setPivotPreset(Superstructure superstructure, PinkArmPreset preset) {
-        return Pivot.setPosition(superstructure.getPivot(),() ->
-                                 Presets.PivotPresets.getPreset(preset));
-    }
-
-    public static Command setElevatorPreset(Superstructure superstructure, PinkArmPreset preset) {
-        return Elevator.setPosition(superstructure.getElevator(), () ->
-                                 Presets.ElevatorPresets.getPreset(preset));
+    public static Command seekPiece(Superstructure superstructure) {
+        return Commands.sequence(
+                Commands.deadline(
+                        Commands.waitUntil(() -> superstructure.vision().seesPiece()),
+                        PinkArmCommands.setPinkArmPreset(
+                                superstructure,
+                                PinkArmCommands.PinkArmPreset.INTAKE),
+                        EndEffectorCommands.setEndEffectorPreset(
+                                superstructure,
+                                EndEffectorCommands.EndEffectorPreset.PREPARE_BACK_INTAKE)
+                ),
+                Commands.parallel(
+                        PinkArmCommands.setPinkArmPreset(
+                                superstructure,
+                                PinkArmCommands.PinkArmPreset.INTAKE,
+                                () -> SquIDController.calculateStatic(
+                                        PIECE_Y_KP,
+                                        PIECE_Y_SETPOINT,
+                                        superstructure.vision().getTy()))
+                                .until(() -> Math.abs(PIECE_Y_SETPOINT - superstructure.vision().getTy()) < PIECE_Y_THRESHOLD),
+                        DriveCommands.joystickDrive(
+                                superstructure.drive(),
+                                () -> SquIDController.calculateStatic(
+                                        PIECE_X_KP,
+                                        PIECE_X_SETPOINT,
+                                        superstructure.vision().getTx()),
+                                () -> 0.0,
+                                () -> 0.0)
+                                .until(() -> Math.abs(PIECE_X_SETPOINT - superstructure.vision().getTy()) < PIECE_X_THRESHOLD)
+                )
+        );
     }
 }

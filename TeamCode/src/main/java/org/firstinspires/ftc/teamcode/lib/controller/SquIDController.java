@@ -35,4 +35,8 @@ public class SquIDController {
         this.minimumInput = minimumInput;
         this.maximumInput = maximumInput;
     }
+
+    public static double calculateStatic(double squP, double setpoint, double measurement) {
+        return squP * Math.sqrt(Math.abs(setpoint - measurement)) * Math.signum(setpoint - measurement);
+    }
 }
