@@ -3,13 +3,9 @@ package org.firstinspires.ftc.teamcode.subsystems.drive;
 import com.pedropathing.follower.FollowerConstants;
 import com.pedropathing.localization.GoBildaPinpointDriver;
 import com.pedropathing.localization.Localizers;
-import com.pedropathing.localization.constants.OTOSConstants;
 import com.pedropathing.localization.constants.PinpointConstants;
-import com.pedropathing.localization.localizers.PinpointLocalizer;
-import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 public class DriveConstants {
@@ -28,11 +24,11 @@ public class DriveConstants {
 
             FollowerConstants.mass = 13;
 
-            FollowerConstants.xMovement = 57.8741;
-            FollowerConstants.yMovement = 52.295;
+            FollowerConstants.xMovement = 56.45001442332896;
+            FollowerConstants.yMovement = 38.89633079942995;
 
-            FollowerConstants.forwardZeroPowerAcceleration = -41.278;
-            FollowerConstants.lateralZeroPowerAcceleration = -59.7819;
+            FollowerConstants.forwardZeroPowerAcceleration = -42.55914512059271;
+            FollowerConstants.lateralZeroPowerAcceleration = -63.30774165641777;
 
             FollowerConstants.translationalPIDFCoefficients.setCoefficients(0.1,0,0.01,0);
             FollowerConstants.useSecondaryTranslationalPID = false;
@@ -42,7 +38,7 @@ public class DriveConstants {
             FollowerConstants.useSecondaryHeadingPID = false;
             FollowerConstants.secondaryHeadingPIDFCoefficients.setCoefficients(2,0,0.1,0); // Not being used, @see useSecondaryHeadingPID
 
-            FollowerConstants.drivePIDFCoefficients.setCoefficients(0.01,0,0.001,0.6,0);
+            FollowerConstants.drivePIDFCoefficients.setCoefficients(0.005,0,0.001,0.6,0);
             FollowerConstants.useSecondaryDrivePID = false;
             FollowerConstants.secondaryDrivePIDFCoefficients.setCoefficients(0.1,0,0,0.6,0); // Not being used, @see useSecondaryDrivePID
 

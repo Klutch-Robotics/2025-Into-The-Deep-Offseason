@@ -10,4 +10,6 @@ public class ElevatorConstants {
     public static double ticksToInches = 1.0;
 
     public static double setpoint = 0.0;
+
+    public static double tolerance = 0.1;
 }

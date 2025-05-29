@@ -5,7 +5,7 @@
             <goBILDA5202SeriesMotor name="FL" port="0"/>-->
             <goBILDA5202SeriesMotor name="BL" port="1"/>-->
 
-<!--            <ContinuousRotationServo name="leftIntake" port="0"/>-->
+            <Servo name="clawServo" port="5"/>
 <!--            <ContinuousRotationServo name="rightIntake" port="1"/>-->
 
                         <goBILDAPinpoint name="pinpoint" port="0" bus="0"/>

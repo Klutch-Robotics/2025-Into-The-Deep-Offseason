@@ -1,6 +1,10 @@
 package org.firstinspires.ftc.teamcode.commands;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.pedropathing.localization.Pose;
+import com.pedropathing.pathgen.BezierLine;
+import com.pedropathing.pathgen.Path;
+import com.pedropathing.pathgen.PathBuilder;
 
 import org.ejml.dense.row.FMatrixComponent;
 import org.firstinspires.ftc.teamcode.lib.controller.SquIDController;
@@ -113,5 +117,28 @@ public class DriveCommands {
                                     () -> omegaEffort);
                         },
                         drive));
+    }
+
+    public static Command driveToPose(Drive drive, Supplier<Pose> pose) {
+        return Drive.followPath(
+                drive,
+                () -> new PathBuilder()
+                        .addPath(new Path(new BezierLine(drive.getPose(), pose.get())))
+                        .setLinearHeadingInterpolation(drive.getPose().getHeading(), pose.get().getHeading())
+                        .build());
+    }
+
+    public static Command driveToPose(Drive drive, Supplier<Pose> pose, Command command, DoubleSupplier commandActivationPoint) {
+        return Drive.followPath(
+                drive,
+                () -> new PathBuilder()
+                        .addPath(new Path(new BezierLine(drive.getPose(), pose.get())))
+                        .setLinearHeadingInterpolation(drive.getPose().getHeading(), pose.get().getHeading())
+                        .addParametricCallback(commandActivationPoint.getAsDouble(), command::schedule)
+                        .build());
+    }
+
+    public static Command setPose(Drive drive, Supplier<Pose> pose) {
+        return Commands.runOnce(() -> drive.setPose(pose.get()), drive);
     }
 }

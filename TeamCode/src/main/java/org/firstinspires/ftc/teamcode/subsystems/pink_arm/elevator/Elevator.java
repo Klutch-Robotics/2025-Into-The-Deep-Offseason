@@ -76,7 +76,7 @@ public class Elevator extends SubsystemBase {
     private void calculateVoltage(double position) {
         telemetry.addData("Elevator Desired Position", position);
 
-        double output = controller.calculate(ElevatorConstants.kP, position, topMotor.getCurrentPosition()) + ElevatorConstants.kG;
+        double output = controller.calculate(ElevatorConstants.kP, position, currentPosition) + ElevatorConstants.kG;
 
         topMotor.set(output);
         bottomMotor.set(output);
@@ -98,12 +98,17 @@ public class Elevator extends SubsystemBase {
         desiredPosition = position;
     }
 
+    private boolean isFinished() {
+        return Math.abs(currentPosition - desiredPosition) < ElevatorConstants.tolerance;
+    }
+
     public double getPosition() {
         return currentPosition;
     }
 
+    // Runs the elevator to a position and stops when it is within tolerance
     public static Command setPosition(Elevator elevator, DoubleSupplier position) {
-        return Commands.run(() -> elevator.setPosition(position.getAsDouble()), elevator);
+        return Commands.run(() -> elevator.setPosition(position.getAsDouble()), elevator).until(elevator::isFinished);
     }
 
     public static Command setVoltage(Elevator elevator, DoubleSupplier voltage) {

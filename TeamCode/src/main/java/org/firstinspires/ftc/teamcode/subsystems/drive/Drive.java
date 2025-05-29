@@ -10,6 +10,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.commands.auto.PoseStorage;
 
 import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -31,6 +32,8 @@ public class Drive extends SubsystemBase {
     public void periodic() {
         try {
             drive.update();
+
+            // Hopefully commenting this out will increase loop times
             drive.drawOnDashBoard();
             drive.telemetryDebug(telemetry);
         } catch (Exception ignored) {
@@ -62,7 +65,7 @@ public class Drive extends SubsystemBase {
     }
 
     public boolean isFinished() {
-        return drive.isBusy();
+        return !drive.isBusy();
     }
 
     public static Command followPath(Drive drive, Pose startPose, PathChain path) {
@@ -70,8 +73,8 @@ public class Drive extends SubsystemBase {
                 .andThen(Commands.runOnce(() -> drive.followPath(path), drive));
     }
 
-    public static Command followPath(Drive drive, PathChain path) {
-        return Commands.runOnce(() -> drive.followPath(path), drive).andThen(Commands.waitUntil(drive::isFinished));
+    public static Command followPath(Drive drive, Supplier<PathChain> path) {
+        return Commands.runOnce(() -> drive.followPath(path.get()), drive).andThen(Commands.waitUntil(drive::isFinished));
     }
 
 }

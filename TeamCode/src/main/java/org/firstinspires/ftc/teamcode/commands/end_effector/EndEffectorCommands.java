@@ -67,4 +67,18 @@ public class EndEffectorCommands {
         );
     }
 
+    public static Command setWristPosition(
+            Superstructure superstructure,
+            DoubleSupplier wristPosition) {
+
+        return Wrist.setPosition(superstructure.wrist(), wristPosition);
+    }
+
+    public static Command setClawPreset(
+            Superstructure superstructure,
+            ClawPreset clawPreset) {
+
+        return Claw.setPosition(superstructure.claw(), () -> Presets.ClawPresets.getPreset(clawPreset));
+    }
+
 }

@@ -24,6 +24,10 @@ public class SuperstructureCommands {
     public static double PIECE_Y_THRESHOLD = 0.0; // Threshold for y position to consider piece found
     public static double PIECE_X_THRESHOLD = 0.0; // Threshold for x position to consider piece found
 
+    public static double BACK_INTAKE_WAIT_SECONDS = 0.5; // Time to wait before closing the claw
+
+    public static double SAMP_SCORE_TIMEOUT = 0.5;
+
     public enum SuperstructureState {
         SEEK_SPEC,
         INTAKE_SPEC,
@@ -35,15 +39,31 @@ public class SuperstructureCommands {
         SCORE_SAMP
     }
 
-    public static Command seekSpec(Superstructure superstructure, Constants.AllianceColor allianceColor) {
+    private static Command seekSpec(Superstructure superstructure, Constants.AllianceColor allianceColor) {
         return Commands.sequence(
                 Vision.setSampPipeline(superstructure.vision(), allianceColor),
                 SuperstructureCommands.seekPiece(superstructure)
         );
     }
 
-    public static Command seekPiece(Superstructure superstructure) {
+    private static Command seekSamp(Superstructure superstructure, Constants.AllianceColor allianceColor) {
         return Commands.sequence(
+                Vision.setSpecPipeline(superstructure.vision(), allianceColor),
+                SuperstructureCommands.seekPiece(superstructure)
+        );
+    }
+
+    private static Command seekYellow(Superstructure superstructure) {
+        return Commands.sequence(
+                Vision.setYellowPipeline(superstructure.vision()),
+                SuperstructureCommands.seekPiece(superstructure)
+        );
+    }
+
+    // TODO:MAKE SURE TO ADD MAX EXTENSION PROTECTION
+    private static Command seekPiece(Superstructure superstructure) {
+        return Commands.sequence(
+                // Move the pink arm to the intake preset until the vision system sees a piece
                 Commands.deadline(
                         Commands.waitUntil(() -> superstructure.vision().seesPiece()),
                         PinkArmCommands.setPinkArmPreset(
@@ -53,6 +73,7 @@ public class SuperstructureCommands {
                                 superstructure,
                                 EndEffectorCommands.EndEffectorPreset.PREPARE_BACK_INTAKE)
                 ),
+                // Move elevator and strafe drivetrain to align with the piece, and set the wrist to the piece angle
                 Commands.parallel(
                         PinkArmCommands.setPinkArmPreset(
                                 superstructure,
@@ -70,8 +91,52 @@ public class SuperstructureCommands {
                                         superstructure.vision().getTx()),
                                 () -> 0.0,
                                 () -> 0.0)
-                                .until(() -> Math.abs(PIECE_X_SETPOINT - superstructure.vision().getTy()) < PIECE_X_THRESHOLD)
+                                .until(() -> Math.abs(PIECE_X_SETPOINT - superstructure.vision().getTy()) < PIECE_X_THRESHOLD),
+                        EndEffectorCommands.setWristPosition(superstructure, () -> superstructure.vision().getAngle())
+                ),
+                // Set the end effector to the back intake preset
+                EndEffectorCommands.setEndEffectorPreset(
+                        superstructure,
+                        EndEffectorCommands.EndEffectorPreset.BACK_INTAKE
+                ),
+                // Wait for a short time before closing the claw
+                Commands.waitSeconds(BACK_INTAKE_WAIT_SECONDS),
+                // Close the claw to intake the piece
+                EndEffectorCommands.setClawPreset(superstructure, EndEffectorCommands.ClawPreset.CLOSE)
+        );
+    }
+
+    private static Command prepareScoreSamp(Superstructure superstructure) {
+        return Commands.parallel(
+            PinkArmCommands.setPinkArmPreset(superstructure, PinkArmCommands.PinkArmPreset.SCORE_HIGH_BUCKET),
+            EndEffectorCommands.setEndEffectorPreset(superstructure, EndEffectorCommands.EndEffectorPreset.PREPARE_SCORE_BUCKET)
+        );
+    }
+
+    private static Command scoreSamp(Superstructure superstructure) {
+        return Commands.sequence(
+                EndEffectorCommands.setClawPreset(superstructure, EndEffectorCommands.ClawPreset.OPEN),
+                Commands.waitSeconds(SAMP_SCORE_TIMEOUT),
+                Commands.parallel(
+                        PinkArmCommands.setPinkArmPreset(superstructure, PinkArmCommands.PinkArmPreset.TRAVEL),
+                        EndEffectorCommands.setEndEffectorPreset(superstructure, EndEffectorCommands.EndEffectorPreset.TRAVEL)
                 )
         );
+    }
+
+    public static Command setSuperstructureState(
+            Superstructure superstructure,
+            SuperstructureState state,
+            Constants.AllianceColor allianceColor) {
+        return switch (state) {
+            case SEEK_SPEC -> seekSpec(superstructure, allianceColor);
+            case INTAKE_SPEC -> Commands.none();
+            case PREPARE_SCORE_SPEC -> Commands.none();
+            case SCORE_SPEC -> Commands.none();
+            case SEEK_SAMP -> seekSamp(superstructure, allianceColor);
+            case INTAKE_SAMP -> Commands.none();
+            case PREPARE_SCORE_SAMP -> prepareScoreSamp(superstructure);
+            case SCORE_SAMP -> scoreSamp(superstructure);
+        };
     }
 }

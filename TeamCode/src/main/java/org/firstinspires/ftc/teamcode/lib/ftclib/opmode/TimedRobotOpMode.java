@@ -13,7 +13,8 @@ public abstract class TimedRobotOpMode extends OpMode {
     }
     @Override
     public final void init_loop() {
-        robotPeriodic();
+        // Enabling this can cause subsystem periodics to crash
+//        robotPeriodic();
     }
 
     @Override

@@ -12,4 +12,6 @@ public class PivotConstants {
     public static double setpoint = -0.12;
 
     public static double initialPosition = -0.12;
+
+    public static double tolerance = 0.01;
 }

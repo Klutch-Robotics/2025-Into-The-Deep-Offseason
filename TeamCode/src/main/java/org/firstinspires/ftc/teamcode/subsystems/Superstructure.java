@@ -12,11 +12,11 @@ import org.firstinspires.ftc.teamcode.subsystems.vision.Vision;
 // Easy way to group all the subsystems together
 public record Superstructure(
         Drive drive,
-        Vision vision,
         Pivot pivot,
         Elevator elevator,
         ShoulderPivot shoulderPivot,
         WristPivot wristPivot,
         Wrist wrist,
-        Claw claw) {
+        Claw claw,
+        Vision vision) {
 }

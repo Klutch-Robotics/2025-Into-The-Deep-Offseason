@@ -16,10 +16,21 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Claw extends SubsystemBase {
     private final Servo claw;
 
+    private double kSetpoint = ClawConstants.setpoint;
+
     public Claw(HardwareMap hwMap) {
         claw = hwMap.get(Servo.class, "clawServo");
 
         claw.setDirection(Servo.Direction.FORWARD);
+    }
+
+    @Override
+    public void periodic() {
+        // If setpoint on dashboard changes, update the setpoint
+        if (kSetpoint != ClawConstants.setpoint) {
+            kSetpoint = ClawConstants.setpoint;
+            setPosition(kSetpoint);
+        }
     }
 
     private void setPosition(double position) {
