@@ -137,13 +137,43 @@ public class SuperstructureCommands {
         return Commands.sequence(
                 EndEffectorCommands.setEndEffectorPreset(superstructure, EndEffectorCommands.EndEffectorPreset.PREPARE_BACK_INTAKE),
                 Commands.waitUntil(() -> superstructure.vision().seesPiece()),
-                EndEffectorCommands.setWristPosition(superstructure, () -> superstructure.vision().getAngle() / 180.0),
+                Commands.deadline(
+                        Commands.waitUntil(() -> isPieceAligned(superstructure)),
+                        EndEffectorCommands.setWristPosition(
+                                superstructure,
+                                () -> superstructure.vision().getAngle() / 180.0).repeatedly()
+                ),
+                EndEffectorCommands.setEndEffectorPreset(superstructure, EndEffectorCommands.EndEffectorPreset.BACK_INTAKE),
+                Commands.waitSeconds(BACK_INTAKE_WAIT_SECONDS),
+                EndEffectorCommands.setClawPreset(superstructure, EndEffectorCommands.ClawPreset.CLOSE)
+        );
+    }
+
+    public static Command testPiecePickUpWithDrive(Superstructure superstructure) {
+        return Commands.sequence(
+                EndEffectorCommands.setEndEffectorPreset(superstructure, EndEffectorCommands.EndEffectorPreset.PREPARE_BACK_INTAKE),
+                Commands.waitUntil(() -> superstructure.vision().seesPiece()),
+                Commands.deadline(
+                        DriveCommands.joystickDrive(
+                                superstructure.drive(),
+                                () -> SquIDController.calculateStatic(
+                                PIECE_X_KP,
+                                PIECE_X_SETPOINT,
+                                superstructure.vision().getTx()),
+                                () -> SquIDController.calculateStatic(
+                                        PIECE_Y_KP,
+                                        PIECE_Y_SETPOINT,
+                                        superstructure.vision().getTy()),
+                                () -> 0.0).until(() -> isPieceAligned(superstructure)),
+                        EndEffectorCommands.setWristPosition(
+                                superstructure,
+                                () -> superstructure.vision().getAngle() / 180.0).repeatedly()
+                ),
                 Commands.waitUntil(() -> isPieceAligned(superstructure)),
                 EndEffectorCommands.setEndEffectorPreset(superstructure, EndEffectorCommands.EndEffectorPreset.BACK_INTAKE),
                 Commands.waitSeconds(BACK_INTAKE_WAIT_SECONDS),
                 EndEffectorCommands.setClawPreset(superstructure, EndEffectorCommands.ClawPreset.CLOSE)
         );
-
     }
 
     public static boolean isPieceAligned(Superstructure superstructure) {
