@@ -28,16 +28,17 @@ public class SuperstructureCommands {
 
     public static double SAMP_SCORE_TIMEOUT = 0.5;
 
-    public enum SuperstructureState {
-        SEEK_SPEC,
-        INTAKE_SPEC,
-        PREPARE_SCORE_SPEC,
-        SCORE_SPEC,
-        SEEK_SAMP,
-        INTAKE_SAMP,
-        PREPARE_SCORE_SAMP,
-        SCORE_SAMP
-    }
+// Was gonna use this to manage superstructure states, but is now just a list of actions that the robot needs to do
+//    public enum SuperstructureState {
+//        SEEK_SPEC,
+//        INTAKE_SPEC,
+//        PREPARE_SCORE_SPEC,
+//        SCORE_SPEC,
+//        SEEK_SAMP,
+//        INTAKE_SAMP,
+//        PREPARE_SCORE_SAMP,
+//        SCORE_SAMP
+//    }
 
     private static Command seekSpec(Superstructure superstructure, Constants.AllianceColor allianceColor) {
         return Commands.sequence(
@@ -124,19 +125,12 @@ public class SuperstructureCommands {
         );
     }
 
-    public static Command setSuperstructureState(
-            Superstructure superstructure,
-            SuperstructureState state,
-            Constants.AllianceColor allianceColor) {
-        return switch (state) {
-            case SEEK_SPEC -> seekSpec(superstructure, allianceColor);
-            case INTAKE_SPEC -> Commands.none();
-            case PREPARE_SCORE_SPEC -> Commands.none();
-            case SCORE_SPEC -> Commands.none();
-            case SEEK_SAMP -> seekSamp(superstructure, allianceColor);
-            case INTAKE_SAMP -> Commands.none();
-            case PREPARE_SCORE_SAMP -> prepareScoreSamp(superstructure);
-            case SCORE_SAMP -> scoreSamp(superstructure);
-        };
+    public static Command angleWristToPiece(Superstructure superstructure) {
+        return Commands.sequence(
+                Commands.waitUntil(() -> superstructure.vision().seesPiece()),
+                EndEffectorCommands.setWristPosition(superstructure, () -> superstructure.vision().getAngle() / 180.0)
+        );
     }
+
+    //Todo: make a test command that angles the wrist, and moves down to intake a piece once the limelight thinks it's ready
 }

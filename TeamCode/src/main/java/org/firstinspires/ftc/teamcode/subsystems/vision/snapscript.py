@@ -20,7 +20,7 @@ def runPipeline(image, llrobot):
     img_hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
     # convert the hsv to a binary image by removing any pixels
     # that do not fall within the following HSV Min/Max values
-    img_threshold = cv2.inRange(img_hsv, (0, 227, 119), (18, 255, 204))
+    img_threshold = cv2.inRange(img_hsv, (0, 229, 35), (33, 255, 178))
 
     # find contours in the new binary image
     contours, _ = cv2.findContours(img_threshold,
@@ -58,10 +58,10 @@ def runPipeline(image, llrobot):
         # record some custom data to send back to the robot
         width, height = rect[1]
         if (width * height < 30000):
-            llpython = [angle,tx,ty,x,y,h,0,7]
+            llpython = [angle,tx,ty,1,width * height,h,0,7]
             print("rejected")
         else:
-            llpython = [angle,tx,ty,x,y,h,1,7]
+            llpython = [angle,tx,ty,0,width * height,h,1,7]
 
     #return the largest contour for the LL crosshair, the modified image, and custom robot data
     return largestContour, image, llpython

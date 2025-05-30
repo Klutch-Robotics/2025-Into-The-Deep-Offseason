@@ -39,13 +39,16 @@ public class Vision extends SubsystemBase {
         angle = result.getPythonOutput()[0];
         tx = result.getPythonOutput()[1];
         ty = result.getPythonOutput()[2];
-        seesPiece = result.getPythonOutput()[3] == 1.0;
         area = result.getPythonOutput()[4];
+        seesPiece = area > VisionConstants.PIECE_AREA_THRESHOLD;
+
 
         telemetry.addLine("Vision");
         telemetry.addData("Angle", angle);
         telemetry.addData("Tx", tx);
         telemetry.addData("Ty", ty);
+        telemetry.addData("Sees Piece", seesPiece);
+        telemetry.addData("Area", area);
     }
 
     public double getAngle() {

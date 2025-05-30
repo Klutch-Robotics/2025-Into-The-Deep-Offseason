@@ -26,18 +26,18 @@ public class BucketAutos {
         return Commands.sequence(
                 DriveCommands.setPose(superstructure.drive(), startPose::getPose),
 
-                DriveCommands.driveToPose(
-                        superstructure.drive(),
-                        scoreBucket::getPose,
-                        SuperstructureCommands.setSuperstructureState(
-                                superstructure,
-                                SuperstructureCommands.SuperstructureState.PREPARE_SCORE_SAMP,
-                                color),
-                        () -> prepareScoreSampParameter),
-                SuperstructureCommands.setSuperstructureState(
-                        superstructure,
-                        SuperstructureCommands.SuperstructureState.SCORE_SPEC,
-                        color),
+//                DriveCommands.driveToPose(
+//                        superstructure.drive(),
+//                        scoreBucket::getPose,
+//                        SuperstructureCommands.setSuperstructureState(
+//                                superstructure,
+//                                SuperstructureCommands.SuperstructureState.PREPARE_SCORE_SAMP,
+//                                color),
+//                        () -> prepareScoreSampParameter),
+//                SuperstructureCommands.setSuperstructureState(
+//                        superstructure,
+//                        SuperstructureCommands.SuperstructureState.SCORE_SPEC,
+//                        color),
 
                 DriveCommands.driveToPose(superstructure.drive(), pickUpOne::getPose),
                 DriveCommands.driveToPose(superstructure.drive(), scoreBucket::getPose),

@@ -73,6 +73,8 @@ public class RobotContainer {
 
         driverController = new CommandGamepad(gamepad1);
 
+        this.allianceColor = allianceColor;
+
         if (autoNum == 0) {
             setDefaultCommands();
             configureButtonBindings();
@@ -80,7 +82,6 @@ public class RobotContainer {
             getAutoCommand(autoNum);
         }
 
-        this.allianceColor = allianceColor;
     }
 
     public void setDefaultCommands(){
@@ -94,19 +95,20 @@ public class RobotContainer {
 
     public void configureButtonBindings() {
         // Toggle spec mode
-        driverController.b().onTrue(Commands.runOnce(() -> specMode = !specMode));
-
-        driverController.a().and(this::isSampMode).onTrue(
-                SuperstructureCommands.setSuperstructureState(
-                    superstructure,
-                    SuperstructureCommands.SuperstructureState.SEEK_SAMP,
-                    allianceColor));
-
-        driverController.a().and(this::isSpecMode).onTrue(
-                SuperstructureCommands.setSuperstructureState(
-                        superstructure,
-                        SuperstructureCommands.SuperstructureState.SEEK_SPEC,
-                        allianceColor));
+//        driverController.b().onTrue(Commands.runOnce(() -> specMode = !specMode));
+//
+//        driverController.a().and(this::isSampMode).onTrue(
+//                SuperstructureCommands.setSuperstructureState(
+//                    superstructure,
+//                    SuperstructureCommands.SuperstructureState.SEEK_SAMP,
+//                    allianceColor));
+//
+//        driverController.a().and(this::isSpecMode).onTrue(
+//                SuperstructureCommands.setSuperstructureState(
+//                        superstructure,
+//                        SuperstructureCommands.SuperstructureState.SEEK_SPEC,
+//                        allianceColor));
+        driverController.a().onTrue(SuperstructureCommands.angleWristToPiece(superstructure));
     }
 
     private boolean isSpecMode() {
@@ -114,7 +116,7 @@ public class RobotContainer {
     }
 
     private boolean isSampMode() {
-        return !isSpecMode();
+        return !specMode;
     }
 
     public Command getAutoCommand(int chooser) {

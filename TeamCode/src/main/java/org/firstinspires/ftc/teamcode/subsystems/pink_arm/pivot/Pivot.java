@@ -15,8 +15,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Pivot extends SubsystemBase {
     private final Telemetry telemetry;
 
-    private final MotorEx topMotor;
-    private final MotorEx bottomMotor;
+    private final MotorEx motor;
 
     private final SquIDController controller;
 
@@ -35,14 +34,11 @@ public class Pivot extends SubsystemBase {
     public Pivot(HardwareMap hwMap, Telemetry telemetry) {
         this.telemetry = telemetry;
 
-        topMotor = new MotorEx(hwMap, "liftTop");
-        bottomMotor = new MotorEx(hwMap, "liftBottom");
+        motor = new MotorEx(hwMap, "pivot");
 
-        topMotor.setInverted(true);
-        bottomMotor.setInverted(false);
+        motor.setInverted(true);
 
-        topMotor.stopAndResetEncoder();
-        bottomMotor.stopAndResetEncoder();
+        motor.stopAndResetEncoder();
 
         controller = new SquIDController(0.1);
 
@@ -54,10 +50,10 @@ public class Pivot extends SubsystemBase {
         try {
             telemetry.addLine("Pivot");
             telemetry.addData("Pivot Position", currentPosition);
-            telemetry.addData("Pivot Voltage", topMotor.getVoltage());
-            telemetry.addData("Pivot Current", topMotor.getCurrent());
+            telemetry.addData("Pivot Voltage", motor.getVoltage());
+            telemetry.addData("Pivot Current", motor.getCurrent());
 
-            currentPosition = topMotor.getCurrentPosition() * PivotConstants.ticksToRotations + PivotConstants.initialPosition;
+            currentPosition = motor.getCurrentPosition() * PivotConstants.ticksToRotations + PivotConstants.initialPosition;
 
             if (controlMode == ControlMode.POSITION) {
                 // If setpoint on dashboard changes, update the setpoint
@@ -79,8 +75,7 @@ public class Pivot extends SubsystemBase {
         double output = controller.calculate(PivotConstants.kP, position, currentPosition)
                 + Math.cos(currentPosition) * PivotConstants.kG;
 
-        topMotor.set(output);
-        bottomMotor.set(output);
+        motor.set(output);
     }
 
     private void setVoltage(double voltage) {
@@ -88,8 +83,7 @@ public class Pivot extends SubsystemBase {
             controlMode = ControlMode.VOLTAGE;
         }
 
-        topMotor.set(voltage);
-        bottomMotor.set(voltage);
+        motor.set(voltage);
     }
 
     private void setPosition(double position) {

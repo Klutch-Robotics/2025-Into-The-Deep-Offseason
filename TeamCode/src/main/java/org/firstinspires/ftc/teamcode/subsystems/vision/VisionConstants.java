@@ -6,7 +6,7 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 
 public class VisionConstants {
-    // Camera names, must match names configured on coprocessor
-    public static String camera0Name = "camera_0";
+    public static double PIECE_AREA_THRESHOLD = 30000;
+
 
 }
