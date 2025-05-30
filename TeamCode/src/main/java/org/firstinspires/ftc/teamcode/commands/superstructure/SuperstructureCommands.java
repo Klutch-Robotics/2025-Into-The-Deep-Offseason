@@ -133,4 +133,21 @@ public class SuperstructureCommands {
     }
 
     //Todo: make a test command that angles the wrist, and moves down to intake a piece once the limelight thinks it's ready
+    public static Command testPiecePickUp(Superstructure superstructure) {
+        return Commands.sequence(
+                EndEffectorCommands.setEndEffectorPreset(superstructure, EndEffectorCommands.EndEffectorPreset.PREPARE_BACK_INTAKE),
+                Commands.waitUntil(() -> superstructure.vision().seesPiece()),
+                EndEffectorCommands.setWristPosition(superstructure, () -> superstructure.vision().getAngle() / 180.0),
+                Commands.waitUntil(() -> isPieceAligned(superstructure)),
+                EndEffectorCommands.setEndEffectorPreset(superstructure, EndEffectorCommands.EndEffectorPreset.BACK_INTAKE),
+                Commands.waitSeconds(BACK_INTAKE_WAIT_SECONDS),
+                EndEffectorCommands.setClawPreset(superstructure, EndEffectorCommands.ClawPreset.CLOSE)
+        );
+
+    }
+
+    public static boolean isPieceAligned(Superstructure superstructure) {
+        return Math.abs(PIECE_Y_SETPOINT - superstructure.vision().getTy()) < PIECE_Y_THRESHOLD &&
+               Math.abs(PIECE_X_SETPOINT - superstructure.vision().getTx()) < PIECE_X_THRESHOLD;
+    }
 }
