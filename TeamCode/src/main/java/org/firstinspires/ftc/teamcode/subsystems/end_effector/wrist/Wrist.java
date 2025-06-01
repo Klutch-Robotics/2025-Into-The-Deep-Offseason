@@ -35,6 +35,10 @@ public class Wrist extends SubsystemBase {
         wrist.setPosition(position);
     }
 
+    public double getPosition() {
+        return wrist.getPosition();
+    }
+
     public static Command setPosition(Wrist wrist, DoubleSupplier position) {
         return Commands.runOnce(() -> wrist.setPosition(position.getAsDouble()), wrist);
     }

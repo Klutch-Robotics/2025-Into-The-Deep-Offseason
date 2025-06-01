@@ -108,7 +108,7 @@ public class RobotContainer {
 //                        superstructure,
 //                        SuperstructureCommands.SuperstructureState.SEEK_SPEC,
 //                        allianceColor));
-        driverController.a().onTrue(SuperstructureCommands.angleWristToPiece(superstructure));
+        driverController.a().onTrue(SuperstructureCommands.testPiecePickUpWithDrive(superstructure));
     }
 
     private boolean isSpecMode() {

@@ -10,6 +10,7 @@ import edu.wpi.first.units.measure.Time;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.BooleanSupplier;
+import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 /**

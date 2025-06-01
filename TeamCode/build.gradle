@@ -41,7 +41,19 @@ android {
     packagingOptions {
         jniLibs.useLegacyPackaging true
     }
+
+//    kotlinOptions {
+//        jvmTarget = '1.8'
+//    }
+
+    compileSdk 35
+
+    defaultConfig {
+        minSdk 24
+    }
 }
+
+
 
 dependencies {
     implementation wpilibTools.deps.wpilibJava("wpiutil")
@@ -61,4 +73,9 @@ dependencies {
     implementation 'com.googlecode.json-simple:json-simple:1.1.1'
 
     implementation group: "us.hebi.quickbuf", name: "quickbuf-runtime", version: wpi.versions.quickbufVersion.get();
+    implementation "com.bylazar:ftcontrol:0.6.5"
+
+    implementation "com.squareup.okhttp3:okhttp:4.10.0"
+
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
 }

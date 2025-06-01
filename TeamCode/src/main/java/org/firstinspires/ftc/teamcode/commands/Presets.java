@@ -55,8 +55,8 @@ public class Presets {
         public static double TRAVEL = 0.0;
         public static double PREPARE_FRONT_INTAKE = 0.0;
         public static double FRONT_INTAKE = 0.0;
-        public static double PREPARE_BACK_INTAKE = 0.0;
-        public static double BACK_INTAKE = 0.0;
+        public static double PREPARE_BACK_INTAKE = 0.1;
+        public static double BACK_INTAKE = 0.3;
         public static double PREPARE_SCORE_BUCKET = 0.0;
         public static double SCORE_BUCKET = 0.0;
         public static double PREPARE_SCORE_SPEC = 0.0;
@@ -82,8 +82,8 @@ public class Presets {
         public static double TRAVEL = 0.0;
         public static double PREPARE_FRONT_INTAKE = 0.0;
         public static double FRONT_INTAKE = 0.0;
-        public static double PREPARE_BACK_INTAKE = 0.0;
-        public static double BACK_INTAKE = 0.0;
+        public static double PREPARE_BACK_INTAKE = 1.0;
+        public static double BACK_INTAKE = 0.9;
         public static double PREPARE_SCORE_BUCKET = 0.0;
         public static double SCORE_BUCKET = 0.0;
         public static double PREPARE_SCORE_SPEC = 0.0;
@@ -106,15 +106,15 @@ public class Presets {
 
     @Config
     public class WristPresets {
-        public static double TRAVEL = 0.0;
-        public static double PREPARE_FRONT_INTAKE = 0.0;
-        public static double FRONT_INTAKE = 0.0;
-        public static double PREPARE_BACK_INTAKE = 0.0;
-        public static double BACK_INTAKE = 0.0;
-        public static double PREPARE_SCORE_BUCKET = 0.0;
-        public static double SCORE_BUCKET = 0.0;
-        public static double PREPARE_SCORE_SPEC = 0.0;
-        public static double SCORE_SPEC = 0.0;
+        public static double TRAVEL = 0.5;
+        public static double PREPARE_FRONT_INTAKE = 0.5;
+        public static double FRONT_INTAKE = 0.5;
+        public static double PREPARE_BACK_INTAKE = 0.5;
+        public static double BACK_INTAKE = 0.5;
+        public static double PREPARE_SCORE_BUCKET = 0.5;
+        public static double SCORE_BUCKET = 0.5;
+        public static double PREPARE_SCORE_SPEC = 0.5;
+        public static double SCORE_SPEC = 0.5;
 
         public static double getPreset(EndEffectorCommands.EndEffectorPreset presetName) {
             return switch (presetName) {
@@ -134,7 +134,7 @@ public class Presets {
     @Config
     public class ClawPresets {
         public static double OPEN = 1.0;
-        public static double CLOSE = 0.0;
+        public static double CLOSE = 0.75;
 
         public static double getPreset(EndEffectorCommands.ClawPreset presetName) {
             return switch (presetName) {

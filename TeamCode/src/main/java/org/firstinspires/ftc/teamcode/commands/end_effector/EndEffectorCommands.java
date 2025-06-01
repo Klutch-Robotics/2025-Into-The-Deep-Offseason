@@ -47,7 +47,7 @@ public class EndEffectorCommands {
         return Commands.parallel(
                 ShoulderPivot.setPosition(superstructure.shoulderPivot(), () -> Presets.ShoulderPivotPresets.getPreset(preset)),
                 WristPivot.setPosition(superstructure.wristPivot(), () -> Presets.WristPivotPresets.getPreset(preset)),
-                Wrist.setPosition(superstructure.wrist(), () -> Presets.WristPresets.getPreset(preset)),
+//                Wrist.setPosition(superstructure.wrist(), () -> Presets.WristPresets.getPreset(preset)),
                 Claw.setPosition(superstructure.claw(), () -> Presets.ClawPresets.getPreset(clawPreset))
         );
     }
