@@ -33,6 +33,8 @@ public class DriveCommands {
     public static double PIECE_YSETPOINT = 0.0;
     public static double PIECE_OMEGASETPOINT = 0.0;
 
+    public static double DRIVE_STARTING_SPEED = 0.5;
+
     private DriveCommands() {}
 
     /**
@@ -46,6 +48,18 @@ public class DriveCommands {
         return Commands.runOnce(drive::startTeleopDrive, drive).andThen(Commands.run(() -> drive.drive(
                 xSupplier,
                 ySupplier,
+                omegaSupplier)));
+    }
+
+    public static Command joystickDriveGas(
+            Drive drive,
+            DoubleSupplier speedSupplier,
+            DoubleSupplier xSupplier,
+            DoubleSupplier ySupplier,
+            DoubleSupplier omegaSupplier) {
+        return Commands.runOnce(drive::startTeleopDrive, drive).andThen(Commands.run(() -> drive.drive(
+                () -> xSupplier.getAsDouble() * DRIVE_STARTING_SPEED + speedSupplier.getAsDouble(),
+                () -> ySupplier.getAsDouble() * DRIVE_STARTING_SPEED + speedSupplier.getAsDouble(),
                 omegaSupplier)));
     }
 

@@ -7,11 +7,7 @@ def get_orientation(rect):
 
     if width < height:
         angle = angle + 90  # make positive
-    # else:
-    #     angle = angle  # rotate base
 
-    # angle = angle % 180  # ensure within 0–180
-    # angle = angle - 90
     return angle
 
 # runPipeline() is called every frame by Limelight's backend.

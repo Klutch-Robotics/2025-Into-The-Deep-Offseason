@@ -35,11 +35,11 @@ public class Elevator extends SubsystemBase {
     public Elevator(HardwareMap hwMap, Telemetry telemetry) {
         this.telemetry = telemetry;
 
-        topMotor = new MotorEx(hwMap, "liftTop");
-        bottomMotor = new MotorEx(hwMap, "liftBottom");
+        topMotor = new MotorEx(hwMap, "liftBottom");
+        bottomMotor = new MotorEx(hwMap, "liftTop");
 
-        topMotor.setInverted(true);
-        bottomMotor.setInverted(false);
+        topMotor.setInverted(false);
+        bottomMotor.setInverted(true);
 
         topMotor.stopAndResetEncoder();
         bottomMotor.stopAndResetEncoder();

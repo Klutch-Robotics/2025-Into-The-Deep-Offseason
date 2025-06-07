@@ -36,7 +36,7 @@ public class Pivot extends SubsystemBase {
 
         motor = new MotorEx(hwMap, "pivot");
 
-        motor.setInverted(true);
+        motor.setInverted(false);
 
         motor.stopAndResetEncoder();
 

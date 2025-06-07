@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.commands.pink_arm;
 
 import org.firstinspires.ftc.teamcode.commands.Presets;
-import org.firstinspires.ftc.teamcode.commands.superstructure.SuperstructureCommands;
 import org.firstinspires.ftc.teamcode.subsystems.Superstructure;
 import org.firstinspires.ftc.teamcode.subsystems.pink_arm.elevator.Elevator;
 import org.firstinspires.ftc.teamcode.subsystems.pink_arm.pivot.Pivot;
@@ -16,7 +15,8 @@ public class PinkArmCommands {
 
     public enum PinkArmPreset {
         TRAVEL,
-        INTAKE,
+        INTAKE_HALF,
+        INTAKE_FULL,
         SCORE_LOW_BUCKET,
         SCORE_HIGH_BUCKET,
         SCORE_SPEC
@@ -32,13 +32,6 @@ public class PinkArmCommands {
                 .andThen(setElevatorPreset(superstructure, preset));
     }
 
-    public static Command setPinkArmPreset(Superstructure superstructure, PinkArmPreset preset, DoubleSupplier elevatorVoltage) {
-        return Commands.deadline(
-                        Commands.waitUntil(() -> superstructure.elevator().getPosition() < PINK_ARM_EXTENSION_THRESHOLD),
-                        Elevator.setVoltage(superstructure.elevator(), elevatorVoltage))
-                .andThen(setPivotPreset(superstructure, preset));
-    }
-
     // Sets a preset on the pivot
     public static Command setPivotPreset(Superstructure superstructure, PinkArmPreset preset) {
         return Pivot.setPosition(superstructure.pivot(),() ->
@@ -49,5 +42,9 @@ public class PinkArmCommands {
     public static Command setElevatorPreset(Superstructure superstructure, PinkArmPreset preset) {
         return Elevator.setPosition(superstructure.elevator(), () ->
                 Presets.ElevatorPresets.getPreset(preset));
+    }
+
+    public static Command setElevatorVoltage(Superstructure superstructure, DoubleSupplier voltage) {
+        return Elevator.setVoltage(superstructure.elevator(), voltage);
     }
 }

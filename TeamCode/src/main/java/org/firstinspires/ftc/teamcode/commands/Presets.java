@@ -11,6 +11,7 @@ public class Presets {
     @Config
     public class PivotPresets {
         public static double TRAVEL = 0.0;
+        public static double INTAKE_HALF = 0.0;
         public static double INTAKE = 0.0;
         public static double PREPARE_FEED = 0.0;
         public static double FEED = 0.0;
@@ -21,7 +22,8 @@ public class Presets {
         public static double getPreset(PinkArmCommands.PinkArmPreset presetName) {
             return switch (presetName) {
                 case TRAVEL -> TRAVEL;
-                case INTAKE -> INTAKE;
+                case INTAKE_HALF -> INTAKE_HALF;
+                case INTAKE_FULL -> INTAKE;
                 case SCORE_LOW_BUCKET -> SCORE_LOW_BUCKET;
                 case SCORE_HIGH_BUCKET -> SCORE_HIGH_BUCKET;
                 case SCORE_SPEC -> SCORE_SPEC;
@@ -32,7 +34,8 @@ public class Presets {
     @Config
     public class ElevatorPresets {
         public static double TRAVEL = 0.0;
-        public static double INTAKE = 0.0;
+        public static double INTAKE_HALF = 0.0;
+        public static double INTAKE_FULL = 0.0;
         public static double PREPARE_FEED = 0.0;
         public static double FEED = 0.0;
         public static double SCORE_LOW_BUCKET = 0.0;
@@ -42,7 +45,8 @@ public class Presets {
         public static double getPreset(PinkArmCommands.PinkArmPreset presetName) {
             return switch (presetName) {
                 case TRAVEL -> TRAVEL;
-                case INTAKE -> INTAKE;
+                case INTAKE_HALF -> INTAKE_HALF;
+                case INTAKE_FULL -> INTAKE_FULL;
                 case SCORE_LOW_BUCKET -> SCORE_LOW_BUCKET;
                 case SCORE_HIGH_BUCKET -> SCORE_HIGH_BUCKET;
                 case SCORE_SPEC -> SCORE_SPEC;

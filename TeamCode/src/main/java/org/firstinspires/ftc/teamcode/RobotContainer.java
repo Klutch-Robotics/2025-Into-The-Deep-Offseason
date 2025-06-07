@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.commands.auto.BucketAutos;
 import org.firstinspires.ftc.teamcode.commands.superstructure.SuperstructureCommands;
 import org.firstinspires.ftc.teamcode.lib.wpilib.CommandGamepad;
 import org.firstinspires.ftc.teamcode.subsystems.Superstructure;
+import org.firstinspires.ftc.teamcode.subsystems.color_sensor.ColorSensor;
 import org.firstinspires.ftc.teamcode.subsystems.drive.Drive;
 import org.firstinspires.ftc.teamcode.subsystems.end_effector.claw.Claw;
 import org.firstinspires.ftc.teamcode.subsystems.end_effector.shoulder_pivot.ShoulderPivot;
@@ -20,7 +21,6 @@ import org.firstinspires.ftc.teamcode.subsystems.vision.Vision;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class RobotContainer {
     // Drive
@@ -36,17 +36,23 @@ public class RobotContainer {
     private final Wrist wrist;
     private final Claw claw;
 
-    // Vision
+    // Sensors
     private final Vision vision;
+    private final ColorSensor colorSensor;
 
     // Superstructure
     private final Superstructure superstructure;
 
+    // Controller
     private final CommandGamepad driverController;
 
+    // Alliance Color
     private final Constants.AllianceColor allianceColor;
 
-    private boolean specMode;
+    // Drive Modes
+    private boolean specMode = false;
+
+    private boolean readyToScoreSpec = false;
 
     public RobotContainer(HardwareMap hwMap, Telemetry telemetry, Gamepad gamepad1, Gamepad gamepad2, int autoNum, Constants.AllianceColor allianceColor) {
         drive = new Drive(hwMap, telemetry);
@@ -60,6 +66,7 @@ public class RobotContainer {
         claw = new Claw(hwMap);
 
         vision = new Vision(hwMap, telemetry);
+        colorSensor = new ColorSensor(hwMap, telemetry);
 
         superstructure = new Superstructure(
                 drive,
@@ -69,7 +76,8 @@ public class RobotContainer {
                 wristPivot,
                 wrist,
                 claw,
-                vision);
+                vision,
+                colorSensor);
 
         driverController = new CommandGamepad(gamepad1);
 
@@ -86,8 +94,9 @@ public class RobotContainer {
 
     public void setDefaultCommands(){
         drive.setDefaultCommand(
-                DriveCommands.joystickDrive(
+                DriveCommands.joystickDriveGas(
                         drive,
+                        driverController::getLeftTrigger,
                         () -> -driverController.getLeftY(),
                         () -> -driverController.getLeftX(),
                         () -> -driverController.getRightX()));
@@ -95,20 +104,35 @@ public class RobotContainer {
 
     public void configureButtonBindings() {
         // Toggle spec mode
-//        driverController.b().onTrue(Commands.runOnce(() -> specMode = !specMode));
-//
-//        driverController.a().and(this::isSampMode).onTrue(
-//                SuperstructureCommands.setSuperstructureState(
-//                    superstructure,
-//                    SuperstructureCommands.SuperstructureState.SEEK_SAMP,
-//                    allianceColor));
-//
-//        driverController.a().and(this::isSpecMode).onTrue(
-//                SuperstructureCommands.setSuperstructureState(
-//                        superstructure,
-//                        SuperstructureCommands.SuperstructureState.SEEK_SPEC,
-//                        allianceColor));
-        driverController.a().onTrue(SuperstructureCommands.testPiecePickUpWithDrive(superstructure));
+        driverController.b().onTrue(Commands.runOnce(() -> specMode = !specMode));
+
+        /* --- Spec Mode Commands --- */
+        // Extend Feeder Half
+        driverController.rightTrigger().and(this::isSpecMode).onTrue(SuperstructureCommands.seekPieceHalf(
+                superstructure,
+                () -> -driverController.getLeftY(),
+                () -> -driverController.getLeftX(),
+                () -> -driverController.getRightX()));
+
+        // Extend Feeder Full
+        driverController.y().and(this::isSpecMode).onTrue(SuperstructureCommands.seekPieceFull(
+                superstructure,
+                () -> -driverController.getLeftY(),
+                () -> -driverController.getLeftX(),
+                () -> -driverController.getRightX()));
+
+        // Pickup override
+        driverController.rightBumper().and(this::isSpecMode).onTrue(SuperstructureCommands.pickUpPiece(superstructure));
+
+        // Prepare to score spec
+        driverController.leftBumper().and(this::isSpecMode).and(() -> !readyToScoreSpec)
+                .onTrue(SuperstructureCommands.prepareScoreSpec(superstructure))
+                .onTrue(Commands.runOnce(() -> readyToScoreSpec = true));
+        // Release claw spec
+        driverController.leftBumper().and(this::isSpecMode).and(() -> readyToScoreSpec)
+                .onTrue(SuperstructureCommands.releaseClawSpec(superstructure))
+                .onTrue(Commands.runOnce(() -> readyToScoreSpec = false));
+
     }
 
     private boolean isSpecMode() {

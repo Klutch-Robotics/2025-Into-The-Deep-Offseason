@@ -130,6 +130,17 @@ public final class Commands {
     return new WaitCommand(seconds);
   }
 
+    /**
+     * Constructs a command that does nothing, finishing after a specified duration.
+     *
+     * @param seconds the supplier for how long the command finishes
+     * @return the command
+     * @see WaitCommand
+     */
+  public static Command waitSeconds(DoubleSupplier seconds) {
+    return new DeferredCommand(() -> new WaitCommand(seconds.getAsDouble()), Set.of());
+  }
+
   /**
    * Constructs a command that does nothing, finishing after a specified duration.
    *

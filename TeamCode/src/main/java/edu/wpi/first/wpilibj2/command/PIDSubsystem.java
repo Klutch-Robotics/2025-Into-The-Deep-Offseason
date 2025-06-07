@@ -34,7 +34,7 @@ public abstract class PIDSubsystem extends SubsystemBase {
   public PIDSubsystem(PIDController controller, double initialPosition) {
     m_controller = requireNonNullParam(controller, "controller", "PIDSubsystem");
     setSetpoint(initialPosition);
-    addChild("PID Controller", m_controller);
+//    addChild("PID Controller", m_controller);
   }
 
   /**

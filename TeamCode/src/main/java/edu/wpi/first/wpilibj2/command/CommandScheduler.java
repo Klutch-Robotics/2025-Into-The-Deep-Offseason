@@ -121,7 +121,7 @@ public final class CommandScheduler implements Sendable, AutoCloseable {
 
   @Override
   public void close() {
-    SendableRegistry.remove(this);
+//    SendableRegistry.remove(this);
 //    LiveWindow.setEnabledListener(null);
 //    LiveWindow.setDisabledListener(null);
   }
