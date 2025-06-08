@@ -11,8 +11,8 @@ public class Presets {
     @Config
     public class PivotPresets {
         public static double TRAVEL = 0.0;
-        public static double INTAKE_HALF = 0.0;
-        public static double INTAKE = 0.0;
+        public static double INTAKE_HALF = 450.0;
+        public static double INTAKE = 450.0;
         public static double PREPARE_FEED = 0.0;
         public static double FEED = 0.0;
         public static double SCORE_LOW_BUCKET = 0.0;
@@ -33,9 +33,9 @@ public class Presets {
 
     @Config
     public class ElevatorPresets {
-        public static double TRAVEL = 0.0;
-        public static double INTAKE_HALF = 0.0;
-        public static double INTAKE_FULL = 0.0;
+        public static double TRAVEL =  0.0;
+        public static double INTAKE_HALF = 500.0;
+        public static double INTAKE_FULL = 1000.0;
         public static double PREPARE_FEED = 0.0;
         public static double FEED = 0.0;
         public static double SCORE_LOW_BUCKET = 0.0;
@@ -59,8 +59,8 @@ public class Presets {
         public static double TRAVEL = 0.0;
         public static double PREPARE_FRONT_INTAKE = 0.0;
         public static double FRONT_INTAKE = 0.0;
-        public static double PREPARE_BACK_INTAKE = 0.1;
-        public static double BACK_INTAKE = 0.3;
+        public static double PREPARE_BACK_INTAKE = 0.5;
+        public static double BACK_INTAKE = 0.7;
         public static double PREPARE_SCORE_BUCKET = 0.0;
         public static double SCORE_BUCKET = 0.0;
         public static double PREPARE_SCORE_SPEC = 0.0;
@@ -86,8 +86,8 @@ public class Presets {
         public static double TRAVEL = 0.0;
         public static double PREPARE_FRONT_INTAKE = 0.0;
         public static double FRONT_INTAKE = 0.0;
-        public static double PREPARE_BACK_INTAKE = 1.0;
-        public static double BACK_INTAKE = 0.9;
+        public static double PREPARE_BACK_INTAKE = 0.93;
+        public static double BACK_INTAKE = 0.93;
         public static double PREPARE_SCORE_BUCKET = 0.0;
         public static double SCORE_BUCKET = 0.0;
         public static double PREPARE_SCORE_SPEC = 0.0;
