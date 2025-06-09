@@ -7,19 +7,21 @@ import org.firstinspires.ftc.teamcode.commands.end_effector.EndEffectorCommands;
 import org.firstinspires.ftc.teamcode.commands.pink_arm.PinkArmCommands;
 import org.firstinspires.ftc.teamcode.lib.controller.SquIDController;
 import org.firstinspires.ftc.teamcode.subsystems.Superstructure;
+import org.firstinspires.ftc.teamcode.subsystems.drive.Drive;
 
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 
 @Config
 public class SuperstructureCommands {
     // Tunable variables for automation
-    public static double PIECE_X_KP = 0.0;
+    public static double PIECE_X_KP = 0.3;
     public static double PIECE_Y_KP = 0.0;
 
-    public static double PIECE_X_SETPOINT = 0.0;
+    public static double PIECE_X_SETPOINT = 0.3;
     public static double PIECE_Y_SETPOINT = 0.0;
 
     public static double PIECE_Y_THRESHOLD = 0.2; // Threshold for y position to consider piece found
@@ -32,10 +34,7 @@ public class SuperstructureCommands {
 
     /* --- Commands for Piece Intake --- */
     public static Command seekPieceHalf(
-            Superstructure superstructure,
-            DoubleSupplier xSupplier,
-            DoubleSupplier ySupplier,
-            DoubleSupplier omegaSupplier) {
+            Superstructure superstructure) {
         return Commands.sequence(
                 // Move the pink arm to the intake preset until the vision system sees a piece
                 prepareForIntakeHalf(superstructure),
@@ -43,11 +42,11 @@ public class SuperstructureCommands {
                 Commands.deadline(
                         Commands.waitUntil(() -> isPieceAligned(superstructure)),
                         alignPinkArmToPiece(superstructure),
-                        alignDriveToPiece(superstructure, xSupplier, ySupplier, omegaSupplier),
                         angleWristToPiece(superstructure)
                 ),
                 // Set the end effector to the back intake preset
-                pickUpPiece(superstructure)
+                pickUpPiece(superstructure),
+                PinkArmCommands.setElevatorVoltage(superstructure, () -> 0.0).withTimeout(0.1)
         );
     }
 
@@ -67,10 +66,40 @@ public class SuperstructureCommands {
                         angleWristToPiece(superstructure)
                 ),
                 // Set the end effector to the back intake preset
-                pickUpPiece(superstructure)
+                pickUpPiece(superstructure),
+                PinkArmCommands.setPinkArmPreset(superstructure, PinkArmCommands.PinkArmPreset.INTAKE_HALF)
         );
     }
 
+
+    public static Command seekPieceHalfAuto(
+            Superstructure superstructure) {
+        return Commands.sequence(
+                // Move the pink arm to the intake preset until the vision system sees a piece
+                prepareForIntakeHalf(superstructure),
+                // Move elevator and strafe drivetrain to align with the piece, and set the wrist to the piece angle
+                Commands.deadline(
+                        Commands.waitUntil(() -> isPieceAligned(superstructure)),
+                        alignPinkArmToPiece(superstructure),
+                        angleWristToPiece(superstructure),
+                        DriveCommands.driveRobotCentric(superstructure.drive(), ()->0,
+                                () -> {
+                                    if (superstructure.vision().seesPiece()) {
+                                        return SquIDController.calculateStatic(
+                                                PIECE_Y_KP,
+                                                PIECE_Y_SETPOINT,
+                                                superstructure.vision().getTy());
+                                    } else {
+                                        return 0.0;
+                                    }},
+
+                                ()->0)
+                ),
+                // Set the end effector to the back intake preset
+                pickUpPiece(superstructure),
+                PinkArmCommands.setElevatorVoltage(superstructure, () -> 0.0).withTimeout(0.1)
+        );
+    }
     public static Command prepareForIntakeHalf(Superstructure superstructure) {
         return Commands.parallel(
                 PinkArmCommands.setPinkArmPreset(
@@ -78,7 +107,8 @@ public class SuperstructureCommands {
                         PinkArmCommands.PinkArmPreset.INTAKE_HALF),
                 EndEffectorCommands.setEndEffectorPreset(
                         superstructure,
-                        EndEffectorCommands.EndEffectorPreset.PREPARE_BACK_INTAKE)
+                        EndEffectorCommands.EndEffectorPreset.PREPARE_BACK_INTAKE),
+                EndEffectorCommands.setClawPreset(superstructure, EndEffectorCommands.ClawPreset.OPEN)
         );
     }
 
@@ -98,23 +128,29 @@ public class SuperstructureCommands {
             DoubleSupplier xSupplier,
             DoubleSupplier ySupplier,
             DoubleSupplier omegaSupplier) {
-        return DriveCommands.joystickDrive(
+        return DriveCommands.driveRobotCentric(
                 superstructure.drive(),
+                xSupplier,
                 () -> SquIDController.calculateStatic(
-                        PIECE_X_KP,
-                        PIECE_X_SETPOINT,
-                        superstructure.vision().getTx()) + xSupplier.getAsDouble(),
-                ySupplier,
+                        PIECE_Y_KP,
+                        PIECE_Y_SETPOINT,
+                        superstructure.vision().getTy()) + ySupplier.getAsDouble(),
                 omegaSupplier);
     }
 
     public static Command alignPinkArmToPiece(Superstructure superstructure) {
         return PinkArmCommands.setElevatorVoltage(
                 superstructure,
-                () -> SquIDController.calculateStatic(
-                        PIECE_Y_KP,
-                        PIECE_Y_SETPOINT,
-                        superstructure.vision().getTy()));
+                () -> {
+                    if (superstructure.vision().seesPiece()){
+                        return SquIDController.calculateStatic(
+                                PIECE_X_KP,
+                                PIECE_X_SETPOINT,
+                                superstructure.vision().getTx());
+                    } else {
+                        return 0.0;
+                    }
+                    }).repeatedly();
     }
 
     public static Command angleWristToPiece(Superstructure superstructure) {
@@ -124,9 +160,9 @@ public class SuperstructureCommands {
                         () -> {
                             if (superstructure.vision().seesPiece()) {
                                 if (superstructure.vision().getAngle() < 90) {
-                                    return (0.25 / 90.0) * superstructure.vision().getAngle() + 0.5;
+                                    return (0.25 / 90.0) * (int) superstructure.vision().getAngle() + 0.5;
                                 } else {
-                                    return (0.25 / 90.0) * superstructure.vision().getAngle();
+                                    return ((0.25 / 90.0) * (int) superstructure.vision().getAngle());
                                 }
                             } else {
                                 return superstructure.wrist().getPosition();
@@ -168,16 +204,19 @@ public class SuperstructureCommands {
     }
 
     /* --- Commands for Scoring --- */
+
     public static Command prepareScoreSamp(Superstructure superstructure) {
         return Commands.parallel(
             PinkArmCommands.setPinkArmPreset(superstructure, PinkArmCommands.PinkArmPreset.SCORE_HIGH_BUCKET),
-            EndEffectorCommands.setEndEffectorPreset(superstructure, EndEffectorCommands.EndEffectorPreset.PREPARE_SCORE_BUCKET)
-        );
+            EndEffectorCommands.setEndEffectorPreset(superstructure, EndEffectorCommands.EndEffectorPreset.PREPARE_SCORE_BUCKET, EndEffectorCommands.ClawPreset.CLOSE),
+            EndEffectorCommands.setWristPreset(superstructure, EndEffectorCommands.EndEffectorPreset.PREPARE_SCORE_BUCKET));
+
     }
 
     public static Command releaseClawSamp(Superstructure superstructure) {
         return Commands.sequence(
-                EndEffectorCommands.setClawPreset(superstructure, EndEffectorCommands.ClawPreset.OPEN),
+                EndEffectorCommands.setWristPreset(superstructure,EndEffectorCommands.EndEffectorPreset.SCORE_BUCKET),
+                EndEffectorCommands.setEndEffectorPreset(superstructure, EndEffectorCommands.EndEffectorPreset.SCORE_BUCKET, EndEffectorCommands.ClawPreset.OPEN),
                 Commands.waitSeconds(SCORE_SAMP_TIMEOUT),
                 Commands.parallel(
                         PinkArmCommands.setPinkArmPreset(superstructure, PinkArmCommands.PinkArmPreset.TRAVEL),
@@ -189,8 +228,8 @@ public class SuperstructureCommands {
     public static Command prepareScoreSpec(Superstructure superstructure) {
         return Commands.parallel(
                 PinkArmCommands.setPinkArmPreset(superstructure, PinkArmCommands.PinkArmPreset.SCORE_SPEC),
-                EndEffectorCommands.setEndEffectorPreset(superstructure, EndEffectorCommands.EndEffectorPreset.PREPARE_SCORE_SPEC)
-        );
+                EndEffectorCommands.setEndEffectorPreset(superstructure, EndEffectorCommands.EndEffectorPreset.PREPARE_SCORE_SPEC, EndEffectorCommands.ClawPreset.CLOSE),
+                EndEffectorCommands.setWristPreset(superstructure, EndEffectorCommands.EndEffectorPreset.PREPARE_SCORE_SPEC));
     }
 
     public static Command releaseClawSpec(Superstructure superstructure) {

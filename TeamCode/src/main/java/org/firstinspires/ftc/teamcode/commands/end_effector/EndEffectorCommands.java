@@ -22,7 +22,8 @@ public class EndEffectorCommands {
         PREPARE_SCORE_BUCKET,
         SCORE_BUCKET,
         PREPARE_SCORE_SPEC,
-        SCORE_SPEC
+        SCORE_SPEC,
+
     }
 
     public enum ClawPreset {
@@ -35,7 +36,10 @@ public class EndEffectorCommands {
             Superstructure superstructure,
             EndEffectorPreset preset) {
 
-        return EndEffectorCommands.setEndEffectorPreset(superstructure, preset, ClawPreset.OPEN);
+        return Commands.parallel(
+                ShoulderPivot.setPosition(superstructure.shoulderPivot(), () -> Presets.ShoulderPivotPresets.getPreset(preset)),
+                WristPivot.setPosition(superstructure.wristPivot(), () -> Presets.WristPivotPresets.getPreset(preset))
+        );
     }
 
     //Sets a preset on the end effector with a specific claw preset.
@@ -50,6 +54,18 @@ public class EndEffectorCommands {
 //                Wrist.setPosition(superstructure.wrist(), () -> Presets.WristPresets.getPreset(preset)),
                 Claw.setPosition(superstructure.claw(), () -> Presets.ClawPresets.getPreset(clawPreset))
         );
+    }
+
+
+    public static Command setWristPivotPreset(
+            Superstructure superstructure,
+            EndEffectorPreset preset) {
+        return WristPivot.setPosition(superstructure.wristPivot(), () -> Presets.WristPresets.getPreset(preset));
+    }
+    public static Command setWristPreset(
+            Superstructure superstructure,
+            EndEffectorPreset preset) {
+        return Wrist.setPosition(superstructure.wrist(), () -> Presets.WristPresets.getPreset(preset));
     }
 
     //Sets a preset on the end effector with a specific wrist position and claw preset.

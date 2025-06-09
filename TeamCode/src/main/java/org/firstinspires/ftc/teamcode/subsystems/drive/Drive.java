@@ -52,6 +52,9 @@ public class Drive extends SubsystemBase {
         drive.setTeleOpMovementVectors(xSupplier.getAsDouble(), ySupplier.getAsDouble(), rotationSupplier.getAsDouble(), false);
     }
 
+    public void driveRobotCentric(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier rotationSupplier) {
+        drive.setTeleOpMovementVectors(xSupplier.getAsDouble(), ySupplier.getAsDouble(), rotationSupplier.getAsDouble(), true);
+    }
     public Pose getPose() {
         return drive.getPose();
     }

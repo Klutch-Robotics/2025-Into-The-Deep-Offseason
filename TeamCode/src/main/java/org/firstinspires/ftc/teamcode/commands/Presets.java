@@ -33,14 +33,14 @@ public class Presets {
 
     @Config
     public class ElevatorPresets {
-        public static double TRAVEL =  0.0;
+        public static double TRAVEL = 30.0;
         public static double INTAKE_HALF = 500.0;
-        public static double INTAKE_FULL = 1000.0;
+        public static double INTAKE_FULL = 750.0;
         public static double PREPARE_FEED = 0.0;
         public static double FEED = 0.0;
         public static double SCORE_LOW_BUCKET = 0.0;
-        public static double SCORE_HIGH_BUCKET = 0.0;
-        public static double SCORE_SPEC = 0.0;
+        public static double SCORE_HIGH_BUCKET = 1540.0;
+        public static double SCORE_SPEC = 500.0;
 
         public static double getPreset(PinkArmCommands.PinkArmPreset presetName) {
             return switch (presetName) {
@@ -56,13 +56,13 @@ public class Presets {
 
     @Config
     public class ShoulderPivotPresets {
-        public static double TRAVEL = 0.0;
+        public static double TRAVEL = 0.5;
         public static double PREPARE_FRONT_INTAKE = 0.0;
         public static double FRONT_INTAKE = 0.0;
-        public static double PREPARE_BACK_INTAKE = 0.5;
-        public static double BACK_INTAKE = 0.7;
-        public static double PREPARE_SCORE_BUCKET = 0.0;
-        public static double SCORE_BUCKET = 0.0;
+        public static double PREPARE_BACK_INTAKE = 0.43;
+        public static double BACK_INTAKE = 0.6;
+        public static double PREPARE_SCORE_BUCKET = 0.4;
+        public static double SCORE_BUCKET = 0.4;
         public static double PREPARE_SCORE_SPEC = 0.0;
         public static double SCORE_SPEC = 0.0;
 
@@ -88,8 +88,8 @@ public class Presets {
         public static double FRONT_INTAKE = 0.0;
         public static double PREPARE_BACK_INTAKE = 0.93;
         public static double BACK_INTAKE = 0.93;
-        public static double PREPARE_SCORE_BUCKET = 0.0;
-        public static double SCORE_BUCKET = 0.0;
+        public static double PREPARE_SCORE_BUCKET = 0.65;
+        public static double SCORE_BUCKET = 0.65;
         public static double PREPARE_SCORE_SPEC = 0.0;
         public static double SCORE_SPEC = 0.0;
 
@@ -115,8 +115,8 @@ public class Presets {
         public static double FRONT_INTAKE = 0.5;
         public static double PREPARE_BACK_INTAKE = 0.5;
         public static double BACK_INTAKE = 0.5;
-        public static double PREPARE_SCORE_BUCKET = 0.5;
-        public static double SCORE_BUCKET = 0.5;
+        public static double PREPARE_SCORE_BUCKET = 0.2;
+        public static double SCORE_BUCKET = 0.251;
         public static double PREPARE_SCORE_SPEC = 0.5;
         public static double SCORE_SPEC = 0.5;
 
@@ -137,8 +137,8 @@ public class Presets {
 
     @Config
     public class ClawPresets {
-        public static double OPEN = 1.0;
-        public static double CLOSE = 0.75;
+        public static double OPEN = 0.6;
+        public static double CLOSE = 0.36;
 
         public static double getPreset(EndEffectorCommands.ClawPreset presetName) {
             return switch (presetName) {

@@ -13,5 +13,5 @@ public class PivotConstants {
 
     public static double initialPosition = 0.0;
 
-    public static double tolerance = 0.01;
+    public static double tolerance = 20;
 }

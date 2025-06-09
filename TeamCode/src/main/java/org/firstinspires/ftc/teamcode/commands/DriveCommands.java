@@ -51,6 +51,16 @@ public class DriveCommands {
                 omegaSupplier)));
     }
 
+    public static Command driveRobotCentric(
+            Drive drive,
+            DoubleSupplier xSupplier,
+            DoubleSupplier ySupplier,
+            DoubleSupplier omegaSupplier) {
+        return Commands.runOnce(drive::startTeleopDrive, drive).andThen(Commands.run(() -> drive.driveRobotCentric(
+                xSupplier,
+                ySupplier,
+                omegaSupplier)));
+    }
     public static Command joystickDriveGas(
             Drive drive,
             DoubleSupplier speedSupplier,

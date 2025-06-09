@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.commands.pink_arm;
 
+import com.acmerobotics.dashboard.config.Config;
+
 import org.firstinspires.ftc.teamcode.commands.Presets;
 import org.firstinspires.ftc.teamcode.subsystems.Superstructure;
 import org.firstinspires.ftc.teamcode.subsystems.pink_arm.elevator.Elevator;
@@ -10,8 +12,9 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 
+@Config
 public class PinkArmCommands {
-    public static double PINK_ARM_EXTENSION_THRESHOLD = 0.1;
+    public static double PINK_ARM_EXTENSION_THRESHOLD = 40.0;
 
     public enum PinkArmPreset {
         TRAVEL,
@@ -19,7 +22,7 @@ public class PinkArmCommands {
         INTAKE_FULL,
         SCORE_LOW_BUCKET,
         SCORE_HIGH_BUCKET,
-        SCORE_SPEC
+        SCORE_SPEC,
     }
 
     // Sets a preset on the pink arm with a specific pivot and elevator preset.
