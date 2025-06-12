@@ -11,5 +11,5 @@ public class ElevatorConstants {
 
     public static double setpoint = 0.0;
 
-    public static double tolerance = 0.1;
+    public static double tolerance = 20.0;
 }

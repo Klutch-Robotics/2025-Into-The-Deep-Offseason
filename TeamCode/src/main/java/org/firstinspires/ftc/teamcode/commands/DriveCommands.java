@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.commands;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.pedropathing.localization.Pose;
+import com.pedropathing.pathgen.BezierCurve;
 import com.pedropathing.pathgen.BezierLine;
 import com.pedropathing.pathgen.Path;
 import com.pedropathing.pathgen.PathBuilder;
@@ -141,6 +142,21 @@ public class DriveCommands {
                         .setLinearHeadingInterpolation(drive.getPose().getHeading(), pose.get().getHeading())
                         .build());
     }
+
+    public static Command splineToPose(Drive drive, Supplier<Pose> pose,Supplier<Pose> pose2) {
+        return Drive.followPath(
+                drive,
+                () -> new PathBuilder()
+
+
+                        .addPath(new Path(new BezierCurve(drive.getPose(), pose.get(),pose2.get())))
+                        .setLinearHeadingInterpolation(drive.getPose().getHeading(), pose.get().getHeading())
+
+
+                        .build());
+    }
+
+
 
     public static Command driveToPose(Drive drive, Supplier<Pose> pose, Command command, DoubleSupplier commandActivationPoint) {
         return Drive.followPath(

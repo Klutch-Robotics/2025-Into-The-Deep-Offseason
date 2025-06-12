@@ -75,7 +75,7 @@ public class Presets {
                 case BACK_INTAKE -> BACK_INTAKE;
                 case PREPARE_SCORE_BUCKET -> PREPARE_SCORE_BUCKET;
                 case SCORE_BUCKET -> SCORE_BUCKET;
-                case PREPARE_SCORE_SPEC -> PREPARE_SCORE_SPEC;
+                case  PREPARE_SCORE_SPEC -> PREPARE_SCORE_SPEC;
                 case SCORE_SPEC -> SCORE_SPEC;
             };
         }
