@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.commands.DriveCommands;
 import org.firstinspires.ftc.teamcode.commands.auto.BucketAutos;
+import org.firstinspires.ftc.teamcode.commands.auto.ClipAutos;
 import org.firstinspires.ftc.teamcode.commands.superstructure.SuperstructureCommands;
 import org.firstinspires.ftc.teamcode.lib.wpilib.CommandGamepad;
 import org.firstinspires.ftc.teamcode.subsystems.Superstructure;
@@ -166,7 +167,7 @@ public class RobotContainer {
             case 1:
             return BucketAutos.bucketAuto(superstructure, allianceColor);
             case 2:
-                return BucketAutos.bucketAuto(superstructure, allianceColor);
+                return ClipAutos.clipAuto(superstructure, allianceColor);
         }
         return Commands.none();
     }

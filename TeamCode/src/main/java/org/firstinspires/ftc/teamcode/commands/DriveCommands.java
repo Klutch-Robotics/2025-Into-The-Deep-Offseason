@@ -152,9 +152,19 @@ public class DriveCommands {
 
 
                         .addPath(new Path(new BezierCurve(drive.getPose(), pose.get(),pose2.get())))
-                        .setLinearHeadingInterpolation(drive.getPose().getHeading(), pose.get().getHeading())
+                        .setLinearHeadingInterpolation(drive.getPose().getHeading(), pose2.get().getHeading())
 
 
+                        .build());
+    }
+
+    public static Command splineToPose(Drive drive, Supplier<Pose> pose, Supplier<Pose> pose2, Command command, DoubleSupplier commandActivationPoint) {
+        return Drive.followPath(
+                drive,
+                () -> new PathBuilder()
+                        .addPath(new Path(new BezierCurve(drive.getPose(), pose.get(),pose2.get())))
+                        .setLinearHeadingInterpolation(drive.getPose().getHeading(), pose2.get().getHeading())
+                        .addParametricCallback(commandActivationPoint.getAsDouble(), command::schedule)
                         .build());
     }
 

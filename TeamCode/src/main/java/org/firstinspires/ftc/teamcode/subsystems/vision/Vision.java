@@ -99,7 +99,4 @@ public class Vision extends SubsystemBase {
         }
     }
 
-    public static Command setYellowPipeline(Vision vision) {
-        return Vision.setPipeline(vision, 4);
-    }
 }

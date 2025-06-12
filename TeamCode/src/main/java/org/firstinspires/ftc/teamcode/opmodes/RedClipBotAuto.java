@@ -8,15 +8,15 @@ import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.RobotContainer;
 import org.firstinspires.ftc.teamcode.lib.ftclib.opmode.CommandOpMode;
 
-@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "😡ClipBotAuto", group = "Auto")
-public class ClipBotAuto extends CommandOpMode {
+@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "RedClipBotAuto", group = "Auto")
+public class RedClipBotAuto extends CommandOpMode {
     private Telemetry robotTelemetry;
     private RobotContainer robotContainer;
 
     @Override
     public void robotInit() {
         robotTelemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-        robotContainer = new RobotContainer(hardwareMap, telemetry, gamepad1, gamepad2, 2, Constants.AllianceColor.BLUE); //Uses heavily modified untested hardware
+        robotContainer = new RobotContainer(hardwareMap, telemetry, gamepad1, gamepad2, 2, Constants.AllianceColor.RED); //Uses heavily modified untested hardware
     }
 
     @Override

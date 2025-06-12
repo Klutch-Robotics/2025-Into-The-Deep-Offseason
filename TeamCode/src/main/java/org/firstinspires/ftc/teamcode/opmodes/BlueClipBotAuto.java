@@ -7,33 +7,28 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.RobotContainer;
 import org.firstinspires.ftc.teamcode.lib.ftclib.opmode.CommandOpMode;
-import org.firstinspires.ftc.teamcode.subsystems.vision.Vision;
 
-import edu.wpi.first.wpilibj.Timer;
-
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "😡RedTeleOp", group = "TeleOp")
-public class RedTeleOp extends CommandOpMode {
+@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "BlueClipBotAuto", group = "Auto")
+public class BlueClipBotAuto extends CommandOpMode {
     private Telemetry robotTelemetry;
-    private Timer timer = new Timer();
-
-    private double previousTime;
+    private RobotContainer robotContainer;
 
     @Override
     public void robotInit() {
         robotTelemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-        new RobotContainer(hardwareMap, robotTelemetry, gamepad1, gamepad2, 0, Constants.AllianceColor.RED); //Uses heavily modified untested hardware
-        timer.start();
+        robotContainer = new RobotContainer(hardwareMap, telemetry, gamepad1, gamepad2, 2, Constants.AllianceColor.BLUE); //Uses heavily modified untested hardware
     }
 
     @Override
     public void robotPeriodic() {
         super.robotPeriodic();
-        robotTelemetry.addData("Loop Time", 1.0 / (timer.get() - previousTime));
-
         robotTelemetry.update();
 
-
-        previousTime = timer.get();
-
     }
+
+    @Override
+    public void enabledInit() {
+        robotContainer.getAutoCommand(1).schedule();
+    }
+
 }
