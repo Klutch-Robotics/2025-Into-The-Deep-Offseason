@@ -16,8 +16,13 @@ import edu.wpi.first.wpilibj2.command.Commands;
 @Config
 public class SuperstructureCommands {
     // Tunable variables for automation
+<<<<<<< Updated upstream
     public static double PIECE_X_KP = 0.0;
     public static double PIECE_Y_KP = 0.0;
+=======
+    public static double PIECE_X_KP = 0.2;
+    public static double PIECE_Y_KP = -0.2;
+>>>>>>> Stashed changes
 
     public static double PIECE_X_SETPOINT = 0.0;
     public static double PIECE_Y_SETPOINT = 0.0;
@@ -52,10 +57,7 @@ public class SuperstructureCommands {
     }
 
     public static Command seekPieceFull(
-            Superstructure superstructure,
-            DoubleSupplier xSupplier,
-            DoubleSupplier ySupplier,
-            DoubleSupplier omegaSupplier) {
+            Superstructure superstructure) {
         return Commands.sequence(
                 // Move the pink arm to the intake preset until the vision system sees a piece
                 prepareForIntakeFull(superstructure),
@@ -63,14 +65,52 @@ public class SuperstructureCommands {
                 Commands.deadline(
                         Commands.waitUntil(() -> isPieceAligned(superstructure)),
                         alignPinkArmToPiece(superstructure),
-                        alignDriveToPiece(superstructure, xSupplier, ySupplier, omegaSupplier),
                         angleWristToPiece(superstructure)
                 ),
                 // Set the end effector to the back intake preset
+<<<<<<< Updated upstream
                 pickUpPiece(superstructure)
         );
     }
 
+=======
+                pickUpPiece(superstructure),
+                PinkArmCommands.setElevatorVoltage(superstructure, () -> 0.0).withTimeout(0.1)
+        );
+    }
+
+
+    public static Command seekPieceHalfAuto(
+            Superstructure superstructure) {
+        return Commands.sequence(
+                // Move the pink arm to the intake preset until the vision system sees a piece
+
+                // Move elevator and strafe drivetrain to align with the piece, and set the wrist to the piece angle
+                Commands.deadline(
+                        Commands.waitUntil(() -> isPieceAligned(superstructure)),
+                        alignPinkArmToPiece(superstructure),
+                        angleWristToPiece(superstructure),
+                        DriveCommands.driveRobotCentric(superstructure.drive(), ()->0,
+                                () -> {
+                                    if (superstructure.vision().seesPiece()) {
+                                        return SquIDController.calculateStatic(
+                                                PIECE_Y_KP,
+                                                PIECE_Y_SETPOINT,
+                                                superstructure.vision().getTy());
+                                    } else {
+                                        return 0.0;
+                                    }},
+
+                                ()->0)
+                ),
+                // Set the end effector to the back intake preset
+                pickUpPiece(superstructure),
+                PinkArmCommands.setElevatorVoltage(superstructure, () -> 0.0).withTimeout(0.1)
+        );
+    }
+
+
+>>>>>>> Stashed changes
     public static Command prepareForIntakeHalf(Superstructure superstructure) {
         return Commands.parallel(
                 PinkArmCommands.setPinkArmPreset(
@@ -152,6 +192,28 @@ public class SuperstructureCommands {
     // TODO: Optimize wait times
     public static Command pickUpPiece(Superstructure superstructure) {
         return Commands.sequence(
+                EndEffectorCommands.setEndEffectorPreset(
+                        superstructure,
+                        EndEffectorCommands.EndEffectorPreset.BACK_INTAKE),
+                Commands.waitSeconds(() -> BACK_INTAKE_WAIT_SECONDS),
+                EndEffectorCommands.setClawPreset(
+                        superstructure,
+                        EndEffectorCommands.ClawPreset.CLOSE),
+                Commands.waitSeconds(() -> BACK_INTAKE_WAIT_SECONDS),
+                EndEffectorCommands.setEndEffectorPreset(
+                        superstructure,
+                        EndEffectorCommands.EndEffectorPreset.PREPARE_BACK_INTAKE,
+                        EndEffectorCommands.ClawPreset.CLOSE)
+        );
+    }
+
+
+    public static Command pickUpPieceOverride(Superstructure superstructure) {
+        return Commands.sequence(
+                EndEffectorCommands.setClawPreset(
+                        superstructure,
+                        EndEffectorCommands.ClawPreset.OPEN),
+                Commands.waitSeconds(() -> BACK_INTAKE_WAIT_SECONDS),
                 EndEffectorCommands.setEndEffectorPreset(
                         superstructure,
                         EndEffectorCommands.EndEffectorPreset.BACK_INTAKE),

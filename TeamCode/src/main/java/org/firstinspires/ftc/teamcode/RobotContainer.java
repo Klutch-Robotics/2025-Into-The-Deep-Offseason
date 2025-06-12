@@ -109,10 +109,18 @@ public class RobotContainer {
         /* --- Spec Mode Commands --- */
         // Extend Feeder Half
         driverController.rightTrigger().and(this::isSpecMode).onTrue(SuperstructureCommands.seekPieceHalf(
+<<<<<<< Updated upstream
                 superstructure,
                 () -> -driverController.getLeftY(),
                 () -> -driverController.getLeftX(),
                 () -> -driverController.getRightX()));
+=======
+                superstructure));
+
+        // Extend Feeder Full
+        driverController.y().and(this::isSpecMode).onTrue(SuperstructureCommands.seekPieceFull(
+                superstructure));
+>>>>>>> Stashed changes
 
         // Extend Feeder Full
         driverController.y().and(this::isSpecMode).onTrue(SuperstructureCommands.seekPieceFull(
