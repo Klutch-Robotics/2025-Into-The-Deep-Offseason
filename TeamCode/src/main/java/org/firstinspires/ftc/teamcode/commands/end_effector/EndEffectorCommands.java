@@ -67,6 +67,14 @@ public class EndEffectorCommands {
         );
     }
 
+    public static Command setWristPreset(
+            Superstructure superstructure,
+            EndEffectorPreset wristPreset) {
+
+        return Wrist.setPosition(superstructure.wrist(),()-> Presets.WristPivotPresets.getPreset(wristPreset));
+    }
+
+
     public static Command setWristPosition(
             Superstructure superstructure,
             DoubleSupplier wristPosition) {

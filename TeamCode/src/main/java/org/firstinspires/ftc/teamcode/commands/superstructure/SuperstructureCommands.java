@@ -77,7 +77,9 @@ public class SuperstructureCommands {
                 Commands.deadline(
                         Commands.waitUntil(() -> isPieceAligned(superstructure)),
                         alignPinkArmToPiece(superstructure),
-                        angleWristToPiece(superstructure),
+                        angleWristToPiece(superstructure)/*
+                        //what the fuck happened to drive robot centric
+
                         DriveCommands.driveRobotCentric(superstructure.drive(), ()->0,
                                 () -> {
                                     if (superstructure.vision().seesPiece()) {
@@ -89,7 +91,7 @@ public class SuperstructureCommands {
                                         return 0.0;
                                     }},
 
-                                ()->0)
+                                ()->0)*/
                 ),
                 // Set the end effector to the back intake preset
                 pickUpPiece(superstructure),
@@ -121,6 +123,7 @@ public class SuperstructureCommands {
         );
     }
 
+    /*
     public static Command alignDriveToPiece(
             Superstructure superstructure,
             DoubleSupplier xSupplier,
@@ -134,7 +137,7 @@ public class SuperstructureCommands {
                         PIECE_Y_SETPOINT,
                         superstructure.vision().getTy()) + ySupplier.getAsDouble(),
                 omegaSupplier);
-    }
+    }*/
 
     public static Command alignPinkArmToPiece(Superstructure superstructure) {
         return PinkArmCommands.setElevatorVoltage(
@@ -169,6 +172,7 @@ public class SuperstructureCommands {
         );
     }
 
+    /*
     public static Command manualIntake(
             Superstructure superstructure,
             DoubleSupplier xSupplier,
@@ -182,6 +186,7 @@ public class SuperstructureCommands {
                         angleWristToPiece(superstructure)
                 ));
     }
+    */
 
     // TODO: Optimize wait times
     public static Command pickUpPiece(Superstructure superstructure) {

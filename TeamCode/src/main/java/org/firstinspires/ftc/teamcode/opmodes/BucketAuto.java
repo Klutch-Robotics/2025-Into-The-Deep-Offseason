@@ -8,8 +8,8 @@ import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.RobotContainer;
 import org.firstinspires.ftc.teamcode.lib.ftclib.opmode.CommandOpMode;
 
-@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "BlueAuto", group = "Auto")
-public class Auto extends CommandOpMode {
+@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "BucketAuto", group = "Auto")
+public class BucketAuto extends CommandOpMode {
     private Telemetry robotTelemetry;
     private RobotContainer robotContainer;
 
