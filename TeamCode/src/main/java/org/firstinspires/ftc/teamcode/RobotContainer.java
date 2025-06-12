@@ -164,7 +164,9 @@ public class RobotContainer {
     public Command getAutoCommand(int chooser) {
         switch (chooser) {
             case 1:
-            return BucketAutos.blueAuto(superstructure, allianceColor);
+            return BucketAutos.bucketAuto(superstructure, allianceColor);
+            case 2:
+                return BucketAutos.bucketAuto(superstructure, allianceColor);
         }
         return Commands.none();
     }

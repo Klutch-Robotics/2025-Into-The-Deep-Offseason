@@ -4,7 +4,6 @@ import com.acmerobotics.dashboard.config.Config;
 
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.commands.DriveCommands;
-import org.firstinspires.ftc.teamcode.commands.end_effector.EndEffectorCommands;
 import org.firstinspires.ftc.teamcode.commands.superstructure.SuperstructureCommands;
 import org.firstinspires.ftc.teamcode.subsystems.Superstructure;
 
@@ -29,7 +28,7 @@ public class BucketAutos {
 
     public static double prepareScoreSampParameter = 0.0;
 
-    public static Command blueAuto(Superstructure superstructure, Constants.AllianceColor color) {
+    public static Command bucketAuto(Superstructure superstructure, Constants.AllianceColor color) {
         return Commands.sequence(
                 DriveCommands.setPose(superstructure.drive(), startPose::getPose),
                 new ParallelDeadlineGroup(
@@ -37,7 +36,6 @@ public class BucketAutos {
                         SuperstructureCommands.prepareScoreSamp(superstructure)
                 ),
                 SuperstructureCommands.releaseClawSamp(superstructure).withTimeout(.1),
-
 
                 new ParallelDeadlineGroup(
                         DriveCommands.driveToPose(superstructure.drive(),pickUpOne::getPose),
@@ -60,8 +58,6 @@ public class BucketAutos {
                         DriveCommands.driveToPose(superstructure.drive(), scoreBucket::getPose),
                         SuperstructureCommands.prepareScoreSamp(superstructure)
                 ),
-
-
 
                 SuperstructureCommands.releaseClawSamp(superstructure).withTimeout(1),
                 new ParallelDeadlineGroup(
