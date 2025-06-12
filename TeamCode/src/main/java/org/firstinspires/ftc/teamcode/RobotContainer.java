@@ -109,18 +109,7 @@ public class RobotContainer {
         /* --- Spec Mode Commands --- */
         // Extend Feeder Half
         driverController.rightTrigger().and(this::isSpecMode).onTrue(SuperstructureCommands.seekPieceHalf(
-<<<<<<< Updated upstream
-                superstructure,
-                () -> -driverController.getLeftY(),
-                () -> -driverController.getLeftX(),
-                () -> -driverController.getRightX()));
-=======
                 superstructure));
-
-        // Extend Feeder Full
-        driverController.y().and(this::isSpecMode).onTrue(SuperstructureCommands.seekPieceFull(
-                superstructure));
->>>>>>> Stashed changes
 
         // Extend Feeder Full
         driverController.y().and(this::isSpecMode).onTrue(SuperstructureCommands.seekPieceFull(
@@ -130,13 +119,14 @@ public class RobotContainer {
         driverController.rightBumper().and(this::isSpecMode).onTrue(SuperstructureCommands.pickUpPieceOverride(superstructure));
 
         // Prepare to score spec
-        driverController.leftBumper().and(this::isSpecMode).and(() -> !readyToScoreSpec)
-                .onTrue(SuperstructureCommands.prepareScoreSpec(superstructure))
-                .onTrue(Commands.runOnce(() -> readyToScoreSpec = true));
+        driverController.leftBumper().and(this::isSpecMode)
+                .onTrue(SuperstructureCommands.prepareScoreSpec(superstructure));
         // Release claw spec
-        driverController.leftBumper().and(this::isSpecMode).and(() -> readyToScoreSpec)
-                .onTrue(SuperstructureCommands.releaseClawSpec(superstructure))
-                .onTrue(Commands.runOnce(() -> readyToScoreSpec = false));
+        driverController.x().and(this::isSpecMode)
+                .onTrue(SuperstructureCommands.releaseClawSpec(superstructure));
+
+
+
         /* --- Sample Mode Commands --- */
 
 
@@ -158,6 +148,7 @@ public class RobotContainer {
         // Release claw spec
         driverController.x().and(this::isSampMode)
                 .onTrue(SuperstructureCommands.releaseClawSamp(superstructure));
+
 
 
     }
