@@ -116,13 +116,10 @@ public class RobotContainer {
 
         // Extend Feeder Full
         driverController.y().and(this::isSpecMode).onTrue(SuperstructureCommands.seekPieceFull(
-                superstructure,
-                () -> -driverController.getLeftY(),
-                () -> -driverController.getLeftX(),
-                () -> -driverController.getRightX()));
+                superstructure));
 
         // Pickup override
-        driverController.rightBumper().and(this::isSpecMode).onTrue(SuperstructureCommands.pickUpPiece(superstructure));
+        driverController.rightBumper().and(this::isSpecMode).onTrue(SuperstructureCommands.pickUpPieceOverride(superstructure));
 
         // Prepare to score spec
         driverController.leftBumper().and(this::isSpecMode).and(() -> !readyToScoreSpec)
@@ -133,6 +130,27 @@ public class RobotContainer {
                 .onTrue(SuperstructureCommands.releaseClawSpec(superstructure))
                 .onTrue(Commands.runOnce(() -> readyToScoreSpec = false));
         /* --- Sample Mode Commands --- */
+
+
+
+        // Extend Feeder Half
+        driverController.rightTrigger().and(this::isSampMode).onTrue(SuperstructureCommands.seekPieceHalf(
+                superstructure));
+
+        // Extend Feeder Full
+        driverController.y().and(this::isSampMode).onTrue(SuperstructureCommands.seekPieceFull(
+                superstructure));
+
+        // Pickup override
+        driverController.rightBumper().and(this::isSampMode).onTrue(SuperstructureCommands.pickUpPieceOverride(superstructure));
+
+        // Extend up For High Bucket
+        driverController.leftBumper().and(this::isSampMode)
+                .onTrue(SuperstructureCommands.prepareScoreSamp(superstructure));
+        // Release claw spec
+        driverController.x().and(this::isSampMode)
+                .onTrue(SuperstructureCommands.releaseClawSamp(superstructure));
+
 
     }
 
