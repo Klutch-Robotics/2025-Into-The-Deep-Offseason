@@ -25,8 +25,8 @@ import org.firstinspires.ftc.teamcode.subsystems.drive.DriveConstants;
  * @author Anyi Lin - 10158 Scott's Bots
  * @version 1.0, 5/6/2024
  */
-@Config
-@Autonomous(name = "Lateral Localizer Tuner", group = ".Localization")
+//@Config
+//@Autonomous(name = "Lateral Localizer Tuner", group = ".Localization")
 public class LateralTuner extends OpMode {
     private PoseUpdater poseUpdater;
     private DashboardPoseTracker dashboardPoseTracker;

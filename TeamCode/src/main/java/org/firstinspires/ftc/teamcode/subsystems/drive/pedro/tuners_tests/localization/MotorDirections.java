@@ -24,7 +24,7 @@ import org.firstinspires.ftc.teamcode.subsystems.drive.DriveConstants;
 import java.util.Arrays;
 import java.util.List;
 
-@TeleOp(name = "Motor Directions", group = "Teleop Test")
+//@TeleOp(name = "Motor Directions", group = "Teleop Test")
 public class MotorDirections extends OpMode {
     private Telemetry telemetryA;
 

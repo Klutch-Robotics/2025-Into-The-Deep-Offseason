@@ -59,9 +59,11 @@ public class DriveCommands {
             DoubleSupplier ySupplier,
             DoubleSupplier omegaSupplier) {
         return Commands.runOnce(drive::startTeleopDrive, drive).andThen(Commands.run(() -> drive.drive(
-                () -> xSupplier.getAsDouble() * DRIVE_STARTING_SPEED + speedSupplier.getAsDouble(),
-                () -> ySupplier.getAsDouble() * DRIVE_STARTING_SPEED + speedSupplier.getAsDouble(),
-                omegaSupplier)));
+                () -> xSupplier.getAsDouble() * (DRIVE_STARTING_SPEED + speedSupplier.getAsDouble()*.5),
+
+                () -> ySupplier.getAsDouble() * (DRIVE_STARTING_SPEED + speedSupplier.getAsDouble()*.5),
+
+                (omegaSupplier))));
     }
 
     /**
