@@ -7,19 +7,10 @@ import com.pedropathing.pathgen.BezierLine;
 import com.pedropathing.pathgen.Path;
 import com.pedropathing.pathgen.PathBuilder;
 
-import org.ejml.dense.row.FMatrixComponent;
 import org.firstinspires.ftc.teamcode.lib.controller.SquIDController;
 import org.firstinspires.ftc.teamcode.subsystems.drive.Drive;
 import org.firstinspires.ftc.teamcode.subsystems.vision.Vision;
 
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import java.util.function.DoubleSupplier;
@@ -63,7 +54,20 @@ public class DriveCommands {
 
                 () -> ySupplier.getAsDouble() * (DRIVE_STARTING_SPEED + speedSupplier.getAsDouble()*.5),
 
-                (omegaSupplier))));
+                (omegaSupplier)
+
+        )));
+    }
+
+    public static Command driveRobotCentric(
+            Drive drive,
+            DoubleSupplier xSupplier,
+            DoubleSupplier ySupplier,
+            DoubleSupplier omegaSupplier) {
+        return Commands.runOnce(drive::startTeleopDrive, drive).andThen(Commands.run(() -> drive.driveRobotCentric(
+                xSupplier,
+                ySupplier,
+                omegaSupplier)));
     }
 
     /**

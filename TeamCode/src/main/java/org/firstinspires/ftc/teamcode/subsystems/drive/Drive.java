@@ -77,4 +77,11 @@ public class Drive extends SubsystemBase {
         return Commands.runOnce(() -> drive.followPath(path.get()), drive).andThen(Commands.waitUntil(drive::isFinished));
     }
 
+
+
+
+    public void driveRobotCentric(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier rotationSupplier) {
+        drive.setTeleOpMovementVectors(xSupplier.getAsDouble(), ySupplier.getAsDouble(), rotationSupplier.getAsDouble(), true);
+    }
+
 }

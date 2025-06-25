@@ -13,7 +13,6 @@ import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 
 @Config
 public class SuperstructureCommands {
@@ -77,8 +76,7 @@ public class SuperstructureCommands {
                 Commands.deadline(
                         Commands.waitUntil(() -> isPieceAligned(superstructure)),
                         alignPinkArmToPiece(superstructure),
-                        angleWristToPiece(superstructure)/*
-                        //what the fuck happened to drive robot centric
+                        angleWristToPiece(superstructure),
 
                         DriveCommands.driveRobotCentric(superstructure.drive(), ()->0,
                                 () -> {
@@ -91,7 +89,40 @@ public class SuperstructureCommands {
                                         return 0.0;
                                     }},
 
-                                ()->0)*/
+                                ()->0)
+                ),
+                // Set the end effector to the back intake preset
+                pickUpPiece(superstructure),
+                PinkArmCommands.setElevatorVoltage(superstructure, () -> 0.0).withTimeout(0.1)
+        );
+    }
+
+    public static Command seekPieceHalfTele(
+            Superstructure superstructure,
+            DoubleSupplier speedSupplier,
+            DoubleSupplier xSupplier,
+            DoubleSupplier ySupplier,
+            DoubleSupplier omegaSupplier) {
+        return Commands.sequence(
+                // Move the pink arm to the intake preset until the vision system sees a piece
+
+                // Move elevator and strafe drivetrain to align with the piece, and set the wrist to the piece angle
+                Commands.deadline(
+                        Commands.waitUntil(() -> isPieceAligned(superstructure)),
+                        alignPinkArmToPiece(superstructure),
+                        angleWristToPiece(superstructure),
+                        DriveCommands.joystickDriveGas(superstructure.drive(),speedSupplier,xSupplier,ySupplier,
+                                () -> {
+                                    if (superstructure.vision().seesPiece()) {
+                                        return (SquIDController.calculateStatic(
+                                                PIECE_Y_KP,
+                                                PIECE_Y_SETPOINT,
+                                                superstructure.vision().getTy()))+omegaSupplier.getAsDouble();
+                                    } else {
+                                        return omegaSupplier.getAsDouble();
+                                    }}
+                                )
+
                 ),
                 // Set the end effector to the back intake preset
                 pickUpPiece(superstructure),
