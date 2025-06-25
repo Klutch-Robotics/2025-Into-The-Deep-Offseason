@@ -52,6 +52,7 @@ public class BucketAutos {
                         DriveCommands.driveToPose(superstructure.drive(),pickUpTwo::getPose),
                         SuperstructureCommands.prepareForIntakeHalf(superstructure)
                 ),
+                
                 SuperstructureCommands.seekPieceHalfAuto(superstructure),
 
                 new ParallelCommandGroup(
